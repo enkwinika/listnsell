@@ -1,0 +1,38 @@
+##########################################################
+# UPDATE SECURITY VULNERABILITIES - CRITICAL
+##########################################################
+
+IMPORTANT: Run these commands in Visual Studio's Package Manager Console
+(Tools ? NuGet Package Manager ? Package Manager Console)
+
+# Step 1: Update jQuery from 3.4.1 to 3.7.1 (fixes moderate severity vulnerabilities)
+Update-Package jQuery -Version 3.7.1
+
+# Step 2: Update Newtonsoft.Json from 12.0.2 to 13.0.3 (fixes HIGH severity vulnerability)
+Update-Package Newtonsoft.Json -Version 13.0.3
+
+# Step 3: Rebuild solution
+# Clean-Solution
+# Build-Solution
+
+##########################################################
+# VERIFICATION
+##########################################################
+
+After updating, verify:
+1. Check packages.config shows jQuery 3.7.1 and Newtonsoft.Json 13.0.3
+2. Build succeeds without errors
+3. Run application and test core functionality
+
+##########################################################
+# VULNERABILITIES FIXED
+##########################################################
+
+jQuery 3.4.1 ? 3.7.1:
+- GHSA-gxr4-xjj5-5px2 (Moderate)
+- GHSA-jpcq-cgw6-v4j6 (Moderate)
+
+Newtonsoft.Json 12.0.2 ? 13.0.3:
+- GHSA-5crp-9r3c-p9vr (HIGH - Critical to fix!)
+
+##########################################################

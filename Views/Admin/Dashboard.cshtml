@@ -1,0 +1,674 @@
+@* Enhanced Admin Dashboard *@
+@{
+    ViewBag.Title = "Admin Dashboard - ReXell Marketplace";
+}
+
+<style>
+    .admin-page {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 2rem 0;
+    }
+
+    .admin-header {
+        margin-bottom: 2rem;
+    }
+
+    .admin-title {
+        font-size: 40px;
+        font-weight: 800;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .admin-subtitle {
+        color: #6b7280;
+        font-size: 16px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card-admin {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card-admin::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+    }
+
+    .stat-card-admin.blue::before { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+    .stat-card-admin.green::before { background: linear-gradient(90deg, #22c55e, #16a34a); }
+    .stat-card-admin.yellow::before { background: linear-gradient(90deg, #eab308, #f59e0b); }
+    .stat-card-admin.red::before { background: linear-gradient(90deg, #ef4444, #dc2626); }
+
+    .stat-card-admin:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+    }
+
+    .stat-card-admin.blue .stat-icon { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .stat-card-admin.green .stat-icon { background: linear-gradient(135deg, #22c55e, #16a34a); }
+    .stat-card-admin.yellow .stat-icon { background: linear-gradient(135deg, #eab308, #f59e0b); }
+    .stat-card-admin.red .stat-icon { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+    .stat-change {
+        padding: 0.5rem 0.75rem;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .stat-change.positive {
+        background: rgba(34, 197, 94, 0.1);
+        color: #16a34a;
+    }
+
+    .stat-change.negative {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+    }
+
+    .stat-main-value {
+        font-size: 36px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label-admin {
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .admin-content-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+    }
+
+    .admin-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .admin-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .admin-card-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
+    .refresh-btn {
+        padding: 0.5rem 1rem;
+        background: #f3f4f6;
+        border: none;
+        border-radius: 10px;
+        color: #cb0c9f;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .refresh-btn:hover {
+        background: #e5e7eb;
+    }
+
+    .activity-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 0.75rem;
+        transition: all 0.3s;
+    }
+
+    .activity-item:hover {
+        background: #f9fafb;
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: white;
+        font-size: 16px;
+    }
+
+    .activity-icon.new-listing { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .activity-icon.new-user { background: linear-gradient(135deg, #22c55e, #16a34a); }
+    .activity-icon.report { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .activity-icon.sale { background: linear-gradient(135deg, #eab308, #f59e0b); }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-title {
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.25rem;
+    }
+
+    .activity-meta {
+        font-size: 13px;
+        color: #9ca3af;
+    }
+
+    .quick-action-btn {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 12px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .quick-action-btn.primary {
+        background: linear-gradient(135deg, #cb0c9f, #b00a88);
+        color: white;
+        box-shadow: 0 4px 16px rgba(203, 12, 159, 0.3);
+    }
+
+    .quick-action-btn.primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(203, 12, 159, 0.4);
+    }
+
+    .quick-action-btn.secondary {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .quick-action-btn.secondary:hover {
+        background: #e5e7eb;
+    }
+
+    .admin-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #f3f4f6;
+    }
+
+    .admin-tab {
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        color: #6b7280;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .admin-tab:hover {
+        color: #374151;
+        background: rgba(203, 12, 159, 0.05);
+    }
+
+    .admin-tab.active {
+        color: #cb0c9f;
+        border-bottom-color: #cb0c9f;
+        background: rgba(203, 12, 159, 0.05);
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 0.5rem;
+    }
+
+    .data-table thead th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: #6b7280;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .data-table tbody tr {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        transition: all 0.3s;
+    }
+
+    .data-table tbody tr:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+
+    .data-table tbody td {
+        padding: 1.25rem;
+        color: #374151;
+    }
+
+    .data-table tbody tr td:first-child {
+        border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
+    }
+
+    .data-table tbody tr td:last-child {
+        border-top-right-radius: 12px;
+        border-bottom-right-radius: 12px;
+    }
+
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .status-badge.pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-badge.approved {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-badge.rejected {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .action-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-right: 0.5rem;
+        font-size: 13px;
+    }
+
+    .action-btn.approve {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .action-btn.approve:hover {
+        background: #a7f3d0;
+    }
+
+    .action-btn.reject {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .action-btn.reject:hover {
+        background: #fecaca;
+    }
+
+    @@media (max-width: 1024px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .admin-content-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 640px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="admin-page">
+    <div class="container mx-auto px-4 max-w-7xl">
+        <!-- Header -->
+        <div class="admin-header flex items-center justify-between">
+            <div>
+                <h1 class="admin-title">
+                    <i class="fas fa-shield-alt text-pink-600"></i>
+                    Admin Dashboard
+                </h1>
+                <p class="admin-subtitle">Welcome back, Admin! Here's what's happening today.</p>
+            </div>
+            <button class="px-6 py-3 bg-white rounded-xl shadow-md hover:shadow-lg transition flex items-center gap-2 font-semibold">
+                <i class="fas fa-download"></i>
+                Export Report
+            </button>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <!-- Total Users -->
+            <div class="stat-card-admin blue">
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 12%
+                    </span>
+                </div>
+                <div class="stat-main-value" id="totalUsers">2,543</div>
+                <div class="stat-label-admin">Total Users</div>
+            </div>
+
+            <!-- Active Listings -->
+            <div class="stat-card-admin green">
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <span class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 8%
+                    </span>
+                </div>
+                <div class="stat-main-value" id="activeListings">856</div>
+                <div class="stat-label-admin">Active Listings</div>
+            </div>
+
+            <!-- Pending Approval -->
+            <div class="stat-card-admin yellow">
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <span class="stat-change positive">
+                        23 New
+                    </span>
+                </div>
+                <div class="stat-main-value" id="pendingApproval">47</div>
+                <div class="stat-label-admin">Pending Approval</div>
+            </div>
+
+            <!-- Reports -->
+            <div class="stat-card-admin red">
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <i class="fas fa-flag"></i>
+                    </div>
+                    <span class="stat-change negative">
+                        Action Needed
+                    </span>
+                </div>
+                <div class="stat-main-value" id="totalReports">12</div>
+                <div class="stat-label-admin">Reports</div>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="admin-content-grid">
+            <!-- Recent Activity -->
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title">Recent Activity</h3>
+                    <button class="refresh-btn" onclick="loadRecentActivity()">
+                        <i class="fas fa-sync-alt mr-2"></i> Refresh
+                    </button>
+                </div>
+
+                <div id="activityFeed">
+                    <div class="activity-item">
+                        <div class="activity-icon new-listing">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">New listing submitted</div>
+                            <div class="activity-meta">John Doe posted "iPhone 13 Pro Max" • 5 minutes ago</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon new-user">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">New user registered</div>
+                            <div class="activity-meta">Sarah Smith joined • 15 minutes ago</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon report">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Listing reported</div>
+                            <div class="activity-meta">User reported "Suspicious item" • 1 hour ago</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon sale">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Item marked as sold</div>
+                            <div class="activity-meta">"Samsung Galaxy S23" sold • 2 hours ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3 class="admin-card-title">Quick Actions</h3>
+                </div>
+
+                <button class="quick-action-btn primary" onclick="showAddCategoryModal()">
+                    <i class="fas fa-plus-circle"></i>
+                    Add New Category
+                </button>
+
+                <button class="quick-action-btn secondary" onclick="sendBulkNotification()">
+                    <i class="fas fa-envelope"></i>
+                    Send Notification
+                </button>
+
+                <button class="quick-action-btn secondary" onclick="generateReport()">
+                    <i class="fas fa-download"></i>
+                    Generate Report
+                </button>
+
+                <button class="quick-action-btn secondary" onclick="manageSettings()">
+                    <i class="fas fa-cog"></i>
+                    Platform Settings
+                </button>
+            </div>
+        </div>
+
+        <!-- Management Tabs -->
+        <div class="admin-card mt-8">
+            <div class="admin-tabs">
+                <div class="admin-tab active" onclick="switchAdminTab('pending')" id="pendingTabBtn">
+                    <i class="fas fa-clock mr-2"></i> Pending Approval
+                </div>
+                <div class="admin-tab" onclick="switchAdminTab('users')" id="usersTabBtn">
+                    <i class="fas fa-users mr-2"></i> User Management
+                </div>
+                <div class="admin-tab" onclick="switchAdminTab('reported')" id="reportedTabBtn">
+                    <i class="fas fa-flag mr-2"></i> Reported Items
+                </div>
+                <div class="admin-tab" onclick="switchAdminTab('analytics')" id="analyticsTabBtn">
+                    <i class="fas fa-chart-line mr-2"></i> Analytics
+                </div>
+            </div>
+
+            <!-- Pending Approval Tab -->
+            <div id="pendingTab" class="tab-content">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Listing</th>
+                            <th>Seller</th>
+                            <th>Price</th>
+                            <th>Submitted</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingListingsTable">
+                        <tr>
+                            <td class="font-semibold">iPhone 13 Pro Max 256GB</td>
+                            <td>John Doe</td>
+                            <td>R 12,500</td>
+                            <td>5 mins ago</td>
+                            <td><span class="status-badge pending">Pending</span></td>
+                            <td>
+                                <button class="action-btn approve" onclick="approveListing(1)">
+                                    <i class="fas fa-check mr-1"></i> Approve
+                                </button>
+                                <button class="action-btn reject" onclick="rejectListing(1)">
+                                    <i class="fas fa-times mr-1"></i> Reject
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="usersTab" class="tab-content" style="display: none;">
+                <p class="text-gray-600">User management table will appear here</p>
+            </div>
+
+            <!-- Reported Tab -->
+            <div id="reportedTab" class="tab-content" style="display: none;">
+                <p class="text-gray-600">Reported items table will appear here</p>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analyticsTab" class="tab-content" style="display: none;">
+                <p class="text-gray-600">Analytics charts will appear here</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchAdminTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+
+        // Show selected tab
+        document.getElementById(tabName + 'TabBtn').classList.add('active');
+        document.getElementById(tabName + 'Tab').style.display = 'block';
+    }
+
+    function loadRecentActivity() {
+        showToast('Refreshing activity feed...', 'info');
+    }
+
+    function approveListing(id) {
+        if (confirm('Approve this listing?')) {
+            $.ajax({
+                url: '/Home/ApproveListing',
+                type: 'POST',
+                data: { id: id },
+                success: function(response) {
+                    if (response.code === "1") {
+                        showToast('Listing approved successfully', 'success');
+                        // Reload pending listings
+                    } else {
+                        showToast(response.message || 'Failed to approve listing', 'error');
+                    }
+                }
+            });
+        }
+    }
+
+    function rejectListing(id) {
+        if (confirm('Reject this listing?')) {
+            $.ajax({
+                url: '/Home/RejectListing',
+                type: 'POST',
+                data: { id: id },
+                success: function(response) {
+                    if (response.code === "1") {
+                        showToast('Listing rejected', 'success');
+                        // Reload pending listings
+                    } else {
+                        showToast(response.message || 'Failed to reject listing', 'error');
+                    }
+                }
+            });
+        }
+    }
+
+    function showAddCategoryModal() {
+        showToast('Add category feature coming soon!', 'info');
+    }
+
+    function sendBulkNotification() {
+        showToast('Bulk notification feature coming soon!', 'info');
+    }
+
+    function generateReport() {
+        showToast('Generating report...', 'info');
+    }
+
+    function manageSettings() {
+        showToast('Platform settings coming soon!', 'info');
+    }
+</script>

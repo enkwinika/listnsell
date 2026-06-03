@@ -1,0 +1,17 @@
+========================================
+COPY AND PASTE THESE COMMANDS
+Into: Package Manager Console in Visual Studio
+========================================
+
+Install-Package Ninject -Version 3.3.4
+Install-Package Ninject.Web.Common -Version 3.3.2
+Install-Package Ninject.Web.Common.WebHost -Version 3.3.2
+Install-Package Ninject.MVC5 -Version 3.3.2
+Install-Package WebActivatorEx -Version 2.2.0
+Install-Package NLog -Version 4.7.15
+Install-Package NLog.Web -Version 4.14.0
+Install-Package NLog.Config -Version 4.7.15
+
+========================================
+Then: Clean Solution + Rebuild Solution
+========================================

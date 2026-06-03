@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ?? TEMPLATE FILE - DO NOT COMMIT ACTUAL SECRETS ??
+  
+  This is a template for Web.config. Copy this file to Web.config
+  and fill in your actual values. Never commit Web.config to source control!
+  
+  Instructions:
+  1. Copy this file: cp Web.config.template Web.config
+  2. Fill in your actual credentials in Web.config
+  3. Make sure Web.config is in .gitignore
+  4. For production, use environment variables instead of hardcoded values
+-->
+<configuration>
+  <appSettings>
+    <!-- Payment Gateway Configuration -->
+    <add key="MerchantID" value="YOUR_MERCHANT_ID_HERE" />
+    <add key="ApplicationID" value="YOUR_APPLICATION_ID_HERE" />
+    <add key="jti" value="YOUR_JTI_TOKEN_HERE" />
+    <add key="securityKey" value="YOUR_SECURITY_KEY_HERE" />
+    
+    <!-- Application Settings -->
+    <add key="leadurl" value="http://localhost:59418/lead/" />
+    <add key="transaction_fee" value="15" />
+    
+    <!-- AWS S3 Configuration - USE ENVIRONMENT VARIABLES IN PRODUCTION! -->
+    <add key="AWS_S3_BUCKET" value="YOUR_BUCKET_NAME" />
+    <add key="AWS_S3_ACCESS_KEY_ID" value="YOUR_AWS_ACCESS_KEY_ID" />
+    <add key="AWS_S3_SECRET_KEY" value="YOUR_AWS_SECRET_KEY" />
+    
+    <!-- MVC Configuration -->
+    <add key="webpages:Version" value="3.0.0.0" />
+    <add key="webpages:Enabled" value="false" />
+    <add key="ClientValidationEnabled" value="true" />
+    <add key="UnobtrusiveJavaScriptEnabled" value="true" />
+    <add key="owin:AutomaticAppStartup" value="false" />
+    <add key="owin:appStartup" value="Coinsa.Startup" />
+  </appSettings>
+  
+  <connectionStrings>
+    <!-- Development Database -->
+    <add name="DefaultConnection" 
+         connectionString="data source=(localdb)\MSSQLLocalDB;initial catalog=sellnlist;integrated security=True;App=EntityFramework" 
+         providerName="System.Data.SqlClient" />
+    
+    <!-- Production Database - USE ENVIRONMENT VARIABLES IN PRODUCTION! -->
+    <add name="DefaultConnectionLive" 
+         connectionString="data source=YOUR_SERVER,1434;initial catalog=YOUR_DATABASE;user id=YOUR_USERNAME;password=YOUR_PASSWORD" 
+         providerName="System.Data.EntityClient" />
+  </connectionStrings>
+  
+  <system.web>
+    <compilation debug="true" targetFramework="4.7.2" />
+    <httpRuntime targetFramework="4.7.2" />
+    <authentication mode="Forms">
+      <forms loginUrl="~/Home/Index" timeout="480" slidingExpiration="true" 
+             cookieless="UseCookies" requireSSL="false" protection="All" name=".SurveyAuth" />
+    </authentication>
+    <sessionState mode="InProc" timeout="480" />
+  </system.web>
+  
+  <system.webServer>
+    <modules runAllManagedModulesForAllRequests="true" />
+    <handlers>
+      <remove name="ExtensionlessUrlHandler-Integrated-4.0" />
+      <remove name="OPTIONSVerbHandler" />
+      <remove name="TRACEVerbHandler" />
+      <add name="ExtensionlessUrlHandler-Integrated-4.0" path="*." verb="*" 
+           type="System.Web.Handlers.TransferRequestHandler" 
+           preCondition="integratedMode,runtimeVersionv4.0" />
+    </handlers>
+  </system.webServer>
+  
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="Antlr3.Runtime" publicKeyToken="eb42632606e9261f" />
+        <bindingRedirect oldVersion="0.0.0.0-3.5.0.2" newVersion="3.5.0.2" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Newtonsoft.Json" culture="neutral" publicKeyToken="30ad4fe6b2a6aeed" />
+        <bindingRedirect oldVersion="0.0.0.0-13.0.0.0" newVersion="13.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Optimization" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-1.1.0.0" newVersion="1.1.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="WebGrease" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="0.0.0.0-1.6.5135.21930" newVersion="1.6.5135.21930" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Ninject" publicKeyToken="c7192dc5380945e7" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-3.3.6.0" newVersion="3.3.6.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Helpers" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-3.0.0.0" newVersion="3.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.WebPages" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-3.0.0.0" newVersion="3.0.0.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35" />
+        <bindingRedirect oldVersion="1.0.0.0-5.2.7.0" newVersion="5.2.7.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+  
+  <system.codedom>
+    <compilers>
+      <compiler language="c#;cs;csharp" extension=".cs" 
+                type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" 
+                warningLevel="4" compilerOptions="/langversion:default /nowarn:1659;1699;1701" />
+      <compiler language="vb;vbs;visualbasic;vbscript" extension=".vb" 
+                type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.VBCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" 
+                warningLevel="4" compilerOptions="/langversion:default /nowarn:41008 /define:_MYTYPE=\&quot;Web\&quot; /optionInfer+" />
+    </compilers>
+  </system.codedom>
+</configuration>

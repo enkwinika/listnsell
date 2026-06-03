@@ -1,0 +1,583 @@
+@* Enhanced User Profile Page *@
+@{
+    ViewBag.Title = "My Profile - ReXell Marketplace";
+}
+
+<style>
+    .profile-page {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+        padding: 2rem 0;
+    }
+
+    .profile-header-card {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .profile-cover {
+        height: 200px;
+        background: linear-gradient(135deg, #cb0c9f 0%, #b00a88 50%, #910b6f 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-cover::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
+        background-size: 50px 50px;
+        opacity: 0.3;
+    }
+
+    .change-cover-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.75rem 1.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .change-cover-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .profile-info-section {
+        position: relative;
+        padding: 0 2rem 2rem;
+    }
+
+    .profile-avatar-wrapper {
+        position: absolute;
+        top: -64px;
+        left: 2rem;
+    }
+
+    .profile-avatar {
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        border: 4px solid white;
+        background: linear-gradient(135deg, #cb0c9f 0%, #b00a88 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 48px;
+        font-weight: 700;
+        box-shadow: 0 8px 24px rgba(203, 12, 159, 0.3);
+        position: relative;
+    }
+
+    .avatar-upload-btn {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        width: 40px;
+        height: 40px;
+        background: white;
+        border-radius: 50%;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #cb0c9f;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s;
+    }
+
+    .avatar-upload-btn:hover {
+        background: #cb0c9f;
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .profile-details {
+        padding-top: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .profile-user-info h1 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .verified-user-badge {
+        color: #3b82f6;
+        font-size: 24px;
+    }
+
+    .profile-email {
+        color: #6b7280;
+        font-size: 16px;
+        margin-bottom: 0.75rem;
+    }
+
+    .profile-meta {
+        display: flex;
+        gap: 2rem;
+        color: #9ca3af;
+        font-size: 14px;
+    }
+
+    .profile-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .edit-profile-btn {
+        padding: 0.75rem 2rem;
+        background: linear-gradient(135deg, #cb0c9f 0%, #b00a88 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 16px rgba(203, 12, 159, 0.3);
+    }
+
+    .edit-profile-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(203, 12, 159, 0.4);
+    }
+
+    .profile-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, rgba(203, 12, 159, 0.05) 0%, rgba(203, 12, 159, 0.1) 100%);
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(203, 12, 159, 0.15);
+    }
+
+    .stat-card.blue {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%);
+    }
+
+    .stat-card.green {
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(34, 197, 94, 0.1) 100%);
+    }
+
+    .stat-card.yellow {
+        background: linear-gradient(135deg, rgba(234, 179, 8, 0.05) 0%, rgba(234, 179, 8, 0.1) 100%);
+    }
+
+    .stat-value {
+        font-size: 36px;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card.pink .stat-value { color: #cb0c9f; }
+    .stat-card.blue .stat-value { color: #3b82f6; }
+    .stat-card.green .stat-value { color: #22c55e; }
+    .stat-card.yellow .stat-value { color: #eab308; }
+
+    .stat-label {
+        font-size: 14px;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .profile-content-card {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .profile-tabs {
+        display: flex;
+        border-bottom: 2px solid #f3f4f6;
+        overflow-x: auto;
+    }
+
+    .profile-tab {
+        padding: 1.25rem 2rem;
+        font-weight: 600;
+        color: #6b7280;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+    }
+
+    .profile-tab:hover {
+        color: #374151;
+        background: rgba(203, 12, 159, 0.05);
+    }
+
+    .profile-tab.active {
+        color: #cb0c9f;
+        border-bottom-color: #cb0c9f;
+        background: rgba(203, 12, 159, 0.05);
+    }
+
+    .tab-badge {
+        padding: 0.25rem 0.5rem;
+        background: #ef4444;
+        color: white;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .profile-tab-content {
+        padding: 2rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .empty-state-icon {
+        font-size: 64px;
+        color: #d1d5db;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #6b7280;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state-desc {
+        color: #9ca3af;
+        margin-bottom: 2rem;
+    }
+
+    @@media (max-width: 768px) {
+        .profile-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .profile-details {
+            flex-direction: column;
+        }
+
+        .profile-avatar {
+            width: 96px;
+            height: 96px;
+            font-size: 36px;
+        }
+
+        .profile-details {
+            padding-top: 60px;
+        }
+    }
+</style>
+
+<div class="profile-page">
+    <div class="container mx-auto px-4 max-w-6xl">
+        <!-- Profile Header -->
+        <div class="profile-header-card">
+            <!-- Cover Image -->
+            <div class="profile-cover">
+                <button class="change-cover-btn" onclick="changeCoverImage()">
+                    <i class="fas fa-camera mr-2"></i> Change Cover
+                </button>
+            </div>
+
+            <!-- Profile Info Section -->
+            <div class="profile-info-section">
+                <!-- Avatar -->
+                <div class="profile-avatar-wrapper">
+                    <div class="profile-avatar" id="profileAvatar">
+                        JD
+                        <button class="avatar-upload-btn" onclick="uploadAvatar()">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- User Details -->
+                <div class="profile-details">
+                    <div class="profile-user-info">
+                        <h1>
+                            <span id="profileName">John Doe</span>
+                            <i class="fas fa-check-circle verified-user-badge" title="Verified User"></i>
+                        </h1>
+                        <p class="profile-email" id="profileEmail">john.doe@example.com</p>
+                        <div class="profile-meta">
+                            <div class="profile-meta-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span id="profileLocation">Johannesburg, SA</span>
+                            </div>
+                            <div class="profile-meta-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>Joined <span id="profileJoinDate">January 2024</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="edit-profile-btn" onclick="openEditProfileModal()">
+                        <i class="fas fa-edit mr-2"></i> Edit Profile
+                    </button>
+                </div>
+
+                <!-- Stats -->
+                <div class="profile-stats">
+                    <div class="stat-card pink">
+                        <p class="stat-value" id="statActiveListings">0</p>
+                        <p class="stat-label">Active Listings</p>
+                    </div>
+                    <div class="stat-card blue">
+                        <p class="stat-value" id="statSoldItems">0</p>
+                        <p class="stat-label">Sold Items</p>
+                    </div>
+                    <div class="stat-card green">
+                        <p class="stat-value" id="statEarnings">R 0</p>
+                        <p class="stat-label">Total Earnings</p>
+                    </div>
+                    <div class="stat-card yellow">
+                        <p class="stat-value" id="statRating">0.0 ?</p>
+                        <p class="stat-label">Rating</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Content -->
+        <div class="profile-content-card">
+            <!-- Tabs -->
+            <div class="profile-tabs">
+                <div class="profile-tab active" onclick="switchProfileTab('listings')" id="listingsTab">
+                    <i class="fas fa-th-large"></i> My Listings
+                </div>
+                <div class="profile-tab" onclick="switchProfileTab('favorites')" id="favoritesTab">
+                    <i class="fas fa-heart"></i> Favorites
+                </div>
+                <div class="profile-tab" onclick="switchProfileTab('messages')" id="messagesTab">
+                    <i class="fas fa-comments"></i> Messages
+                    <span class="tab-badge" id="messagesBadge" style="display: none;">0</span>
+                </div>
+                <div class="profile-tab" onclick="switchProfileTab('purchases')" id="purchasesTab">
+                    <i class="fas fa-shopping-bag"></i> Purchases
+                </div>
+                <div class="profile-tab" onclick="switchProfileTab('settings')" id="settingsTab">
+                    <i class="fas fa-cog"></i> Settings
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="profile-tab-content">
+                <!-- Listings Tab -->
+                <div id="listingsContent" class="tab-content-panel">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-900">My Listings</h3>
+                        <button class="px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition" onclick="showPage('create')">
+                            <i class="fas fa-plus-circle mr-2"></i> Create New Listing
+                        </button>
+                    </div>
+                    <div id="myListingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+
+                <!-- Favorites Tab -->
+                <div id="favoritesContent" class="tab-content-panel" style="display: none;">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">My Favorites</h3>
+                    <div id="favoritesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+
+                <!-- Messages Tab -->
+                <div id="messagesContent" class="tab-content-panel" style="display: none;">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Messages</h3>
+                    <div id="messagesList"></div>
+                </div>
+
+                <!-- Purchases Tab -->
+                <div id="purchasesContent" class="tab-content-panel" style="display: none;">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Purchase History</h3>
+                    <div id="purchasesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div id="settingsContent" class="tab-content-panel" style="display: none;">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Account Settings</h3>
+                    <div class="max-w-2xl">
+                        <!-- Settings form here -->
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                                <input type="text" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-600 focus:outline-none transition" value="John Doe">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                                <input type="email" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-600 focus:outline-none transition" value="john@example.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+                                <input type="tel" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-600 focus:outline-none transition" placeholder="+27 XX XXX XXXX">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Location</label>
+                                <input type="text" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-600 focus:outline-none transition" value="Johannesburg, SA">
+                            </div>
+                            <div class="pt-4">
+                                <button class="px-8 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition">
+                                    <i class="fas fa-save mr-2"></i> Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Profile page JavaScript
+    function switchProfileTab(tabName) {
+        // Hide all tabs and panels
+        document.querySelectorAll('.profile-tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-content-panel').forEach(panel => panel.style.display = 'none');
+
+        // Show selected tab and panel
+        document.getElementById(tabName + 'Tab').classList.add('active');
+        document.getElementById(tabName + 'Content').style.display = 'block';
+
+        // Load data for the tab
+        switch(tabName) {
+            case 'listings':
+                loadMyListings();
+                break;
+            case 'favorites':
+                loadFavorites();
+                break;
+            case 'messages':
+                loadMessages();
+                break;
+            case 'purchases':
+                loadPurchases();
+                break;
+        }
+    }
+
+    function loadMyListings() {
+        $.ajax({
+            url: '/Home/GetMyListings',
+            type: 'GET',
+            success: function(response) {
+                if (response.code === "1" && response.data) {
+                    renderMyListings(response.data);
+                }
+            }
+        });
+    }
+
+    function renderMyListings(listings) {
+        const grid = document.getElementById('myListingsGrid');
+        if (listings.length === 0) {
+            grid.innerHTML = `
+                <div class="col-span-full empty-state">
+                    <i class="fas fa-box-open empty-state-icon"></i>
+                    <h4 class="empty-state-title">No listings yet</h4>
+                    <p class="empty-state-desc">Start selling by creating your first listing</p>
+                    <button class="px-8 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transition" onclick="showPage('create')">
+                        <i class="fas fa-plus-circle mr-2"></i> Create Listing
+                    </button>
+                </div>
+            `;
+            return;
+        }
+        
+        // Render listings (would use listing card component)
+        grid.innerHTML = listings.map(listing => renderListingCard(listing, false)).join('');
+    }
+
+    function loadFavorites() {
+        // Load user's favorite listings
+        const grid = document.getElementById('favoritesGrid');
+        grid.innerHTML = `
+            <div class="col-span-full empty-state">
+                <i class="fas fa-heart empty-state-icon"></i>
+                <h4 class="empty-state-title">No favorites yet</h4>
+                <p class="empty-state-desc">Save listings you're interested in</p>
+            </div>
+        `;
+    }
+
+    function loadMessages() {
+        // Load user messages
+        const list = document.getElementById('messagesList');
+        list.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-comments empty-state-icon"></i>
+                <h4 class="empty-state-title">No messages</h4>
+                <p class="empty-state-desc">Your conversations will appear here</p>
+            </div>
+        `;
+    }
+
+    function loadPurchases() {
+        // Load purchase history
+        const grid = document.getElementById('purchasesGrid');
+        grid.innerHTML = `
+            <div class="col-span-full empty-state">
+                <i class="fas fa-shopping-bag empty-state-icon"></i>
+                <h4 class="empty-state-title">No purchases yet</h4>
+                <p class="empty-state-desc">Items you purchase will appear here</p>
+            </div>
+        `;
+    }
+
+    function changeCoverImage() {
+        showToast('Cover image upload coming soon!', 'info');
+    }
+
+    function uploadAvatar() {
+        showToast('Avatar upload coming soon!', 'info');
+    }
+
+    function openEditProfileModal() {
+        switchProfileTab('settings');
+    }
+
+    // Load profile data on page load
+    $(document).ready(function() {
+        // Load user profile data
+        loadMyListings();
+    });
+</script>

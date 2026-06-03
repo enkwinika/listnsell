@@ -1,0 +1,611 @@
+@* Enhanced Listing Card Component *@
+@model dynamic
+
+<style>
+    .listing-card-enhanced {
+        position: relative;
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid #f0f0f0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+    }
+
+    .listing-card-enhanced:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 32px rgba(203, 12, 159, 0.2);
+        border-color: #cb0c9f;
+    }
+
+    .listing-card-enhanced::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(203, 12, 159, 0.05) 0%, transparent 100%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .listing-card-enhanced:hover::before {
+        opacity: 1;
+    }
+
+    .listing-image-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 75%;
+        overflow: hidden;
+        background: linear-gradient(135deg, #f5f5f5 0%, #e5e5e5 100%);
+    }
+
+    .listing-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .listing-card-enhanced:hover .listing-image {
+        transform: scale(1.08);
+    }
+
+    .favorite-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 10;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 50%;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transform: scale(0.8);
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .listing-card-enhanced:hover .favorite-btn {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .favorite-btn:hover {
+        background: #cb0c9f;
+        transform: scale(1.1);
+    }
+
+    .favorite-btn:hover i {
+        color: white;
+    }
+
+    .favorite-btn.active {
+        background: #cb0c9f;
+        opacity: 1;
+    }
+
+    .favorite-btn.active i {
+        color: white;
+    }
+
+    .quick-view-btn {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        z-index: 10;
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: none;
+        font-size: 13px;
+        font-weight: 600;
+        color: #cb0c9f;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .listing-card-enhanced:hover .quick-view-btn {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .quick-view-btn:hover {
+        background: #cb0c9f;
+        color: white;
+    }
+
+    .price-badge-enhanced {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        padding: 8px 16px;
+        border-radius: 24px;
+        font-weight: 700;
+        color: #cb0c9f;
+        font-size: 18px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        z-index: 5;
+    }
+
+    .condition-badge-enhanced {
+        position: absolute;
+        top: 60px;
+        left: 12px;
+        padding: 6px 12px;
+        border-radius: 16px;
+        font-weight: 600;
+        color: white;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        z-index: 5;
+    }
+
+    .condition-new {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    }
+
+    .condition-like-new {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    }
+
+    .condition-used {
+        background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    }
+
+    .featured-badge {
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        color: #78350f;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        z-index: 6;
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { transform: translateX(-50%) scale(1); }
+        50% { transform: translateX(-50%) scale(1.05); }
+    }
+
+    .listing-content {
+        padding: 20px;
+    }
+
+    .listing-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.4;
+        transition: color 0.2s;
+    }
+
+    .listing-card-enhanced:hover .listing-title {
+        color: #cb0c9f;
+    }
+
+    .listing-description {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 12px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.5;
+    }
+
+    .listing-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 12px;
+        border-top: 1px solid #f3f4f6;
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    .listing-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .listing-meta-item i {
+        color: #cb0c9f;
+        font-size: 12px;
+    }
+
+    .seller-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-top: 12px;
+        margin-top: 12px;
+        border-top: 1px solid #f3f4f6;
+    }
+
+    .seller-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #cb0c9f 0%, #b00a88 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+
+    .seller-details {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .seller-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .verified-badge {
+        color: #3b82f6;
+        font-size: 12px;
+    }
+
+    .seller-rating {
+        font-size: 11px;
+        color: #6b7280;
+    }
+
+    .listing-stats {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid #f3f4f6;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+    .stat-item i {
+        color: #9ca3af;
+    }
+
+    /* Skeleton Loader */
+    .listing-skeleton {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid #f0f0f0;
+    }
+
+    .skeleton-image {
+        width: 100%;
+        padding-bottom: 75%;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+    }
+
+    .skeleton-content {
+        padding: 20px;
+    }
+
+    .skeleton-line {
+        height: 12px;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+        border-radius: 4px;
+        margin-bottom: 8px;
+    }
+
+    @@keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+</style>
+
+<!-- This is a template component - actual rendering would be done via JavaScript -->
+<script type="text/template" id="listing-card-template">
+    <div class="listing-card-enhanced" onclick="showItemDetail({{id}})" data-id="{{id}}">
+        <!-- Favorite Button -->
+        <button class="favorite-btn {{favoriteClass}}" 
+                onclick="event.stopPropagation(); toggleFavorite({{id}})"
+                title="Add to favorites">
+            <i class="{{favoriteIcon}} text-pink-600"></i>
+        </button>
+
+        <!-- Quick View Button -->
+        <button class="quick-view-btn" 
+                onclick="event.stopPropagation(); quickViewListing({{id}})"
+                title="Quick view">
+            <i class="fas fa-eye mr-1"></i> Quick View
+        </button>
+
+        <!-- Image Container -->
+        <div class="listing-image-container">
+            <img src="{{image}}" alt="{{title}}" class="listing-image" loading="lazy">
+            
+            <!-- Price Badge -->
+            <div class="price-badge-enhanced">
+                R {{price}}
+            </div>
+            
+            <!-- Condition Badge -->
+            <div class="condition-badge-enhanced {{conditionClass}}">
+                {{condition}}
+            </div>
+
+            <!-- Featured Badge -->
+            {{#if featured}}
+            <div class="featured-badge">
+                ? FEATURED
+            </div>
+            {{/if}}
+        </div>
+
+        <!-- Content -->
+        <div class="listing-content">
+            <h3 class="listing-title">{{title}}</h3>
+            <p class="listing-description">{{description}}</p>
+
+            <!-- Meta Information -->
+            <div class="listing-meta">
+                <div class="listing-meta-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{location}}</span>
+                </div>
+                <div class="listing-meta-item">
+                    <i class="far fa-clock"></i>
+                    <span>{{timeAgo}}</span>
+                </div>
+            </div>
+
+            <!-- Seller Info -->
+            {{#if showSeller}}
+            <div class="seller-info">
+                <div class="seller-avatar">{{sellerInitial}}</div>
+                <div class="seller-details">
+                    <div class="seller-name">
+                        {{sellerName}}
+                        {{#if sellerVerified}}
+                        <i class="fas fa-check-circle verified-badge" title="Verified Seller"></i>
+                        {{/if}}
+                    </div>
+                    <div class="seller-rating">
+                        {{#if sellerRating}}
+                        <i class="fas fa-star text-yellow-400"></i> {{sellerRating}}
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+
+            <!-- Stats (Views, Likes) -->
+            <div class="listing-stats">
+                <div class="stat-item">
+                    <i class="far fa-eye"></i>
+                    <span>{{views}}</span>
+                </div>
+                <div class="stat-item">
+                    <i class="far fa-heart"></i>
+                    <span>{{likes}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<!-- Skeleton Loader Template -->
+<script type="text/template" id="listing-skeleton-template">
+    <div class="listing-skeleton">
+        <div class="skeleton-image"></div>
+        <div class="skeleton-content">
+            <div class="skeleton-line" style="width: 80%;"></div>
+            <div class="skeleton-line" style="width: 100%;"></div>
+            <div class="skeleton-line" style="width: 60%;"></div>
+            <div class="skeleton-line" style="width: 40%; margin-top: 16px;"></div>
+        </div>
+    </div>
+</script>
+
+<script>
+    // Enhanced Listing Card JavaScript Functions
+    
+    // Render listing card with data
+    function renderListingCard(listing, showSeller = false) {
+        const template = document.getElementById('listing-card-template').innerHTML;
+        
+        // Prepare data
+        const data = {
+            id: listing.id,
+            image: listing.image || '/Content/uploads/placeholder.jpg',
+            title: listing.title,
+            description: listing.description || '',
+            price: parseFloat(listing.price).toLocaleString('en-ZA'),
+            condition: listing.condition,
+            conditionClass: getConditionClass(listing.condition),
+            location: listing.location,
+            timeAgo: getTimeAgo(listing.dateCreated || listing.date),
+            featured: listing.featured || false,
+            favoriteClass: listing.isFavorite ? 'active' : '',
+            favoriteIcon: listing.isFavorite ? 'fas fa-heart' : 'far fa-heart',
+            showSeller: showSeller,
+            sellerName: listing.sellerName || 'Unknown',
+            sellerInitial: (listing.sellerName || 'U').charAt(0).toUpperCase(),
+            sellerVerified: listing.sellerVerified || false,
+            sellerRating: listing.sellerRating || null,
+            views: listing.views || 0,
+            likes: listing.likes || 0
+        };
+
+        // Simple template replacement (in production, use a proper template engine)
+        let html = template;
+        Object.keys(data).forEach(key => {
+            const regex = new RegExp(`{{${key}}}`, 'g');
+            html = html.replace(regex, data[key]);
+        });
+
+        // Handle conditionals (simple implementation)
+        html = html.replace(/{{#if featured}}[\s\S]*?{{\/if}}/g, match => {
+            return data.featured ? match.replace(/{{#if featured}}|{{\/if}}/g, '') : '';
+        });
+        
+        html = html.replace(/{{#if showSeller}}[\s\S]*?{{\/if}}/g, match => {
+            return data.showSeller ? match.replace(/{{#if showSeller}}|{{\/if}}/g, '') : '';
+        });
+
+        html = html.replace(/{{#if sellerVerified}}[\s\S]*?{{\/if}}/g, match => {
+            return data.sellerVerified ? match.replace(/{{#if sellerVerified}}|{{\/if}}/g, '') : '';
+        });
+
+        html = html.replace(/{{#if sellerRating}}[\s\S]*?{{\/if}}/g, match => {
+            return data.sellerRating ? match.replace(/{{#if sellerRating}}|{{\/if}}/g, '') : '';
+        });
+
+        return html;
+    }
+
+    function getConditionClass(condition) {
+        switch(condition.toLowerCase()) {
+            case 'new': return 'condition-new';
+            case 'like new': return 'condition-like-new';
+            case 'used': return 'condition-used';
+            default: return 'condition-used';
+        }
+    }
+
+    function getTimeAgo(dateString) {
+        if (!dateString) return 'Recently';
+        
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins}m ago`;
+        if (diffHours < 24) return `${diffHours}h ago`;
+        if (diffDays < 7) return `${diffDays}d ago`;
+        if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+        return `${Math.floor(diffDays / 30)}mo ago`;
+    }
+
+    // Toggle favorite status
+    function toggleFavorite(listingId) {
+        if (!isLoggedIn) {
+            showToast('Please login to save favorites', 'warning');
+            showEnhancedLogin();
+            return;
+        }
+
+        const btn = document.querySelector(`[data-id="${listingId}"] .favorite-btn`);
+        const icon = btn.querySelector('i');
+        const isActive = btn.classList.contains('active');
+
+        // Optimistic UI update
+        btn.classList.toggle('active');
+        icon.classList.toggle('far');
+        icon.classList.toggle('fas');
+
+        // API call to save favorite
+        $.ajax({
+            url: '/Home/ToggleFavorite',
+            type: 'POST',
+            data: { listingId: listingId },
+            success: function(response) {
+                if (response.code === "1") {
+                    showToast(isActive ? 'Removed from favorites' : 'Added to favorites', 'success');
+                } else {
+                    // Revert on failure
+                    btn.classList.toggle('active');
+                    icon.classList.toggle('far');
+                    icon.classList.toggle('fas');
+                    showToast(response.message || 'Failed to update favorite', 'error');
+                }
+            },
+            error: function() {
+                // Revert on error
+                btn.classList.toggle('active');
+                icon.classList.toggle('far');
+                icon.classList.toggle('fas');
+                showToast('An error occurred', 'error');
+            }
+        });
+    }
+
+    // Quick view listing (opens modal without navigation)
+    function quickViewListing(listingId) {
+        showItemDetail(listingId);
+    }
+
+    // Render skeleton loaders
+    function renderListingSkeletons(count = 6) {
+        const template = document.getElementById('listing-skeleton-template').innerHTML;
+        let html = '';
+        for (let i = 0; i < count; i++) {
+            html += template;
+        }
+        return html;
+    }
+
+    // Show skeletons while loading
+    function showLoadingSkeletons() {
+        const grid = document.getElementById('itemsGrid');
+        if (grid) {
+            grid.innerHTML = renderListingSkeletons(9);
+        }
+    }
+</script>

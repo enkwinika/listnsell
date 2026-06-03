@@ -1,0 +1,2235 @@
+﻿ <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-8">
+                    <h1 class="text-2xl font-bold brand-color cursor-pointer" onclick="showPage('browse')">
+                        <i class="fas fa-store"></i> listNsell
+                    </h1>
+                    <div class="hidden md:flex gap-6">
+                        <a href="#" class="text-gray-700 hover:text-pink-600 font-medium transition" onclick="showPage('browse')">Browse</a>
+                        <a href="#" class="text-gray-700 hover:text-pink-600 font-medium transition" id="dashboardLink" onclick="showPage('dashboard')" style="display:none;">Dashboard</a>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button class="brand-bg text-white px-6 py-2.5 rounded-lg font-semibold hover:opacity-90 transition shadow-md" id="createListingBtn" onclick="showPage('create')" style="display:none;">
+                        <i class="fas fa-plus-circle"></i> Sell Item
+                    </button>
+                    <button class="text-gray-700 px-6 py-2.5 rounded-lg font-semibold hover:bg-gray-100 transition" id="loginBtn" onclick="showPage('auth')">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <button class="text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100 transition" id="userMenuBtn" onclick="toggleUserMenu()" style="display:none;">
+                        <i class="fas fa-user-circle text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- User Dropdown Menu -->
+    <div id="userMenu" class="hidden absolute right-4 top-16 bg-white shadow-lg rounded-lg py-2 z-50" style="width: 200px;">
+        <a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showPage('dashboard')">
+            <i class="fas fa-th-large mr-2"></i> Dashboard
+        </a>
+        <a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="logout()">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+        </a>
+    </div>
+    <div id="adminMenu" class="hidden absolute right-4 top-16 bg-white shadow-lg rounded-lg py-2 z-50" style="width: 200px;">
+        <a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showPage('admin')">
+            <i class="fas fa-shield-alt mr-2"></i> Admin Panel
+        </a>
+
+        <a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showPage('dashboard')">
+            <i class="fas fa-th-large mr-2"></i> Dashboard
+        </a>
+        <a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="logout()">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+        </a>
+    </div>
+
+    <!-- Browse Page -->
+    <div id="browsePage" class="container mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- Filter Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="filter-sidebar" id="filterSidebar">
+                    <div class="flex justify-between items-center mb-4 lg:hidden">
+                        <h3 class="font-bold text-lg">Filters</h3>
+                        <button onclick="toggleMobileFilters()" class="text-gray-500">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+
+                    <!-- Search -->
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchInput" placeholder="Search items..." class="search-input">
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="filter-section">
+                        <div class="filter-title">Category</div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-all" value="" onchange="handleCategoryFilter(this)" checked>
+                            <label for="cat-all">All Categories</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-electronics" value="Electronics" onchange="handleCategoryFilter(this)">
+                            <label for="cat-electronics">Electronics</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-furniture" value="Furniture" onchange="handleCategoryFilter(this)">
+                            <label for="cat-furniture">Furniture</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-clothing" value="Clothing" onchange="handleCategoryFilter(this)">
+                            <label for="cat-clothing">Clothing</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-sports" value="Sports" onchange="handleCategoryFilter(this)">
+                            <label for="cat-sports">Sports & Outdoors</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-books" value="Books" onchange="handleCategoryFilter(this)">
+                            <label for="cat-books">Books</label>
+                        </div>
+                    </div>
+
+                    <!-- Price Range -->
+                    <div class="filter-section">
+                        <div class="filter-title">Price Range</div>
+                        <div class="price-inputs">
+                            <input type="number" id="minPrice" placeholder="Min" value="" class="price-input">
+                            <span class="text-gray-400">—</span>
+                            <input type="number" id="maxPrice" placeholder="Max" value="" class="price-input">
+                        </div>
+                        <button onclick="applyFilters()" class="mt-3 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg font-medium text-sm transition">
+                            Apply
+                        </button>
+                    </div>
+
+                    <!-- Condition Filter -->
+                    <div class="filter-section">
+                        <div class="filter-title">Condition</div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cond-new" value="New" onchange="applyFilters()">
+                            <label for="cond-new">New</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cond-likenew" value="Like New" onchange="applyFilters()">
+                            <label for="cond-likenew">Like New</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cond-used" value="Used" onchange="applyFilters()">
+                            <label for="cond-used">Used</label>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="filter-section">
+                        <div class="filter-title">Location</div>
+                        <input type="text" id="locationFilter" placeholder="Enter location..." class="price-input w-full" onchange="applyFilters()">
+                    </div>
+
+                    <button onclick="clearAllFilters()" class="clear-filters-btn w-full">
+                        <i class="fas fa-redo mr-2"></i> Clear All Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Items Grid -->
+            <div class="lg:col-span-3">
+                <!-- Results Header -->
+                <div class="results-header">
+                    <div class="results-count">
+                        Showing <strong id="itemCount">0</strong> items
+                    </div>
+                    <select id="sortBy" class="sort-select" onchange="applyFilters()">
+                        <option value="newest">Newest First</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="popular">Most Popular</option>
+                    </select>
+                </div>
+
+                <!-- Items Grid -->
+                <div id="itemsGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mb-8">
+                    <!-- Items will be populated by JS -->
+                </div>
+
+                <!-- Load More -->
+                <div class="text-center" id="loadMoreContainer">
+                    <button onclick="loadMoreItems()" id="loadMoreBtn" class="load-more-btn">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>Load More Items</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Filter Button -->
+    <button class="mobile-filter-btn lg:hidden" onclick="toggleMobileFilters()">
+        <i class="fas fa-filter mr-2"></i> Filters
+    </button>
+
+    <!-- Filter Overlay for Mobile -->
+    <div class="filter-overlay" id="filterOverlay" onclick="toggleMobileFilters()"></div>
+
+    <!-- Create Listing Page -->
+    <div id="createPage" class="hidden container mx-auto px-4 py-8 max-w-3xl">
+        <div class="bg-white rounded-xl shadow-sm p-8 border border-gray-100">
+            <h2 class="text-3xl font-bold mb-6">Create New Listing</h2>
+            <form id="createListingForm" onsubmit="submitListing(event)">
+                @*<div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-2">Upload Images (Max 5, 10MB each)</label>
+                    <input type="file" id="imageUpload" accept="image/*" multiple class="w-full px-4 py-3 border border-gray-300 rounded-lg" onchange="previewImages(event)">
+                    <div id="imagePreviewGrid" class="grid grid-cols-3 sm:grid-cols-5 gap-3 mt-3"></div>
+                </div>*@
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-2">
+                        Upload Images * 
+                        <span class="text-sm font-normal text-gray-500">(Max 5 images, 10MB each)</span>
+                    </label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-pink-500 transition-colors">
+                        <input type="file" 
+                               id="imageUpload" 
+                               accept="image/*" 
+                               multiple 
+                               class="hidden" 
+                               onchange="previewImages(event)">
+                        <label for="imageUpload" class="cursor-pointer">
+                            <div class="text-gray-400 mb-2">
+                                <i class="fas fa-cloud-upload-alt text-4xl"></i>
+                            </div>
+                            <p class="text-gray-600 font-medium">Click to upload images</p>
+                            <p class="text-sm text-gray-500 mt-1">PNG, JPG, GIF up to 10MB</p>
+                        </label>
+                    </div>
+                    <div id="imagePreviewGrid" class="grid grid-cols-3 sm:grid-cols-5 gap-3 mt-4"></div>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-2">Title *</label>
+                    <input type="text" id="itemTitle" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="e.g., iPhone 13 Pro Max">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-2">Description *</label>
+                    <textarea id="itemDescription" required rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="Describe your item in detail..."></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Category *</label>
+                        <select id="itemCategory" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500">
+                            <option value="">Select Category</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Furniture">Furniture</option>
+                            <option value="Clothing">Clothing</option>
+                            <option value="Books">Books</option>
+                            <option value="Sports">Sports & Outdoors</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Price (R) *</label>
+                        <input type="number" id="itemPrice" required min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Condition *</label>
+                        <select id="itemCondition" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500">
+                            <option value="">Select Condition</option>
+                            <option value="New">New</option>
+                            <option value="Like New">Like New</option>
+                            <option value="Used">Used</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Location *</label>
+                        <input type="text" id="itemLocation" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="City, Suburb">
+                    </div>
+                </div>
+                <div class="mb-6 flex items-center gap-2">
+                    <input type="checkbox" id="notRobot" required class="w-5 h-5">
+                    <label for="notRobot" class="text-gray-700">I'm not a robot</label>
+                </div>
+                <div class="flex gap-4">
+                    <button type="submit" id="submitListingBtn" class="brand-bg text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition flex-1">
+                        <i class="fas fa-check"></i> Submit Listing
+                    </button>
+                    <button type="button" onclick="showPage('browse')" class="bg-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-400 transition">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="hidden container mx-auto px-4 py-8">
+        <h2 class="text-3xl font-bold mb-6">My Dashboard</h2>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+            <div class="border-b">
+                <div class="flex">
+                    <button onclick="switchTab('listings')" id="listingsTab" class="px-6 py-4 font-semibold border-b-2 border-pink-600 text-pink-600">My Listings</button>
+                    <button onclick="switchTab('messages')" id="messagesTab" class="px-6 py-4 font-semibold text-gray-600 hover:text-gray-800">Messages</button>
+                    <button onclick="switchTab('profile')" id="profileTab" class="px-6 py-4 font-semibold text-gray-600 hover:text-gray-800">Profile</button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div id="listingsContent">
+                    <div id="myListingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+                <div id="messagesContent" class="hidden">
+                    <div id="messagesList" class="space-y-4"></div>
+                </div>
+                <div id="profileContent" class="hidden">
+                    <div class="max-w-2xl">
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-semibold mb-2">Name</label>
+                            <input type="text" id="profileName" class="w-full px-4 py-3 border border-gray-300 rounded-lg" value="John Doe">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-semibold mb-2">Email</label>
+                            <input type="email" id="profileEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg" value="john@example.com">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-semibold mb-2">Location</label>
+                            <input type="text" id="profileLocation" class="w-full px-4 py-3 border border-gray-300 rounded-lg" value="New York, NY">
+                        </div>
+                        <button onclick="updateProfile()" class="brand-bg text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Page -->
+    <div id="authPage" class="hidden container mx-auto px-4 py-8">
+        <div class="max-w-md mx-auto bg-white rounded-xl shadow-sm p-8 border border-gray-100">
+            <div class="mb-6">
+                <div class="flex gap-4 border-b">
+                    <button onclick="switchAuthTab('login')" id="loginTabBtn" class="flex-1 py-3 font-semibold border-b-2 border-pink-600 text-pink-600">Login</button>
+                    <button onclick="switchAuthTab('register')" id="registerTabBtn" class="flex-1 py-3 font-semibold text-gray-600">Register</button>
+                </div>
+            </div>
+            <div id="loginForm">
+                <h2 class="text-2xl font-bold mb-6">Welcome Back</h2>
+                <form onsubmit="handleLogin(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">Email</label>
+                        <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="your@email.com" value="enkw@mail.com"/>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">Password</label>
+                        <input type="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="••••••••"  value="Enkw@610230" />
+                    </div>
+                    <div class="mb-4">
+                        <a href="#" onclick="switchAuthTab('forgot')" class="text-pink-600 hover:underline text-sm">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="w-full brand-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                        Login
+                    </button>
+                </form>
+            </div>
+            <div id="registerForm" class="hidden">
+                <h2 class="text-2xl font-bold mb-6">Create Account</h2>
+                <form onsubmit="handleRegister(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">Full Name</label>
+                        <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="John Doe" value="John Doe"/>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">Email</label>
+                        <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="your@email.com" value="enkw@mail.com"/>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">Password</label>
+                        <input type="password" id="regPassword" required minlength="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="••••••••"  value="Enkw@610230"/>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">Confirm Password</label>
+                        <input type="password" id="regConfirmPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="••••••••" value="Enkw@610230" />
+                    </div>
+                    <button type="submit" class="w-full brand-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                        Register
+                    </button>
+                </form>
+            </div>
+            <div id="forgotForm" class="hidden">
+                <h2 class="text-2xl font-bold mb-6">Reset Password</h2>
+                <form onsubmit="handleForgotPassword(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">Email</label>
+                        <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="your@email.com">
+                    </div>
+                    <button type="submit" class="w-full brand-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                        Send Reset Link
+                    </button>
+                    <div class="mt-4">
+                        <a href="#" onclick="switchAuthTab('login')" class="text-pink-600 hover:underline text-sm">Back to Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Detail Modal -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <button onclick="closeModal('itemModal')" class="absolute top-4 right-4 text-white hover:text-gray-200 text-2xl z-10 bg-black bg-opacity-50 w-10 h-10 rounded-full flex items-center justify-center">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="itemModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Message Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content max-w-lg">
+            <button onclick="closeModal('messageModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="p-8">
+                <h3 class="text-2xl font-bold mb-4">Send Message to Seller</h3>
+                <form onsubmit="sendMessage(event)">
+                    <textarea id="messageText" rows="5" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 mb-4" placeholder="Hi, I'm interested in this item..."></textarea>
+                    <button type="submit" class="w-full brand-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Required Modal -->
+    <div id="loginRequiredModal" class="modal">
+        <div class="modal-content max-w-md">
+            <div class="p-8 text-center">
+                <i class="fas fa-lock text-6xl brand-color mb-4"></i>
+                <h3 class="text-2xl font-bold mb-4">Login Required</h3>
+                <p class="text-gray-600 mb-6">You need to log in to contact the seller.</p>
+                <div class="flex gap-4">
+                    <button onclick="closeModal('loginRequiredModal'); showPage('auth');" class="flex-1 brand-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                        Login
+                    </button>
+                    <button onclick="closeModal('loginRequiredModal'); showPage('auth'); switchAuthTab('register');" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400 transition">
+                        Register
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Admin Page -->
+<div id="adminPage" class="hidden container mx-auto px-4 py-8">
+    <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-3xl font-bold">
+            <i class="fas fa-shield-alt text-pink-600 mr-2"></i>
+            Admin Panel
+        </h2>
+        <div class="flex gap-4">
+            <div class="bg-white rounded-lg shadow-sm px-4 py-2 border border-gray-200">
+                <span class="text-sm text-gray-500">Pending Approval</span>
+                <p class="text-2xl font-bold text-yellow-600" id="pendingCount">0</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm px-4 py-2 border border-gray-200">
+                <span class="text-sm text-gray-500">Total Listings</span>
+                <p class="text-2xl font-bold text-gray-800" id="totalListingsCount">0</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm px-4 py-2 border border-gray-200">
+                <span class="text-sm text-gray-500">Reports</span>
+                <p class="text-2xl font-bold text-red-600" id="reportsCount">0</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+        <div class="border-b">
+            <div class="flex">
+                <button onclick="switchAdminTab('pending')" id="pendingTab" class="px-6 py-4 font-semibold border-b-2 border-pink-600 text-pink-600">
+                    Pending Approval
+                </button>
+                <button onclick="switchAdminTab('all')" id="allListingsTab" class="px-6 py-4 font-semibold text-gray-600 hover:text-gray-800">
+                    All Listings
+                </button>
+                <button onclick="switchAdminTab('reported')" id="reportedTab" class="px-6 py-4 font-semibold text-gray-600 hover:text-gray-800">
+                    Reported Items
+                </button>
+                <button onclick="switchAdminTab('users')" id="usersTab" class="px-6 py-4 font-semibold text-gray-600 hover:text-gray-800">
+                    Users
+                </button>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            <!-- Pending Approval Content -->
+            <div id="pendingContent">
+                <div class="mb-4 flex justify-between items-center">
+                    <h3 class="text-xl font-semibold">Listings Pending Approval</h3>
+                    <button onclick="loadAdminListings('pending')" class="text-pink-600 hover:text-pink-700">
+                        <i class="fas fa-sync-alt mr-1"></i> Refresh
+                    </button>
+                </div>
+                <div id="pendingListingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- All Listings Content -->
+            <div id="allListingsContent" class="hidden">
+                <div class="mb-4 flex justify-between items-center">
+                    <h3 class="text-xl font-semibold">All Listings</h3>
+                    <div class="flex gap-2">
+                        <select id="adminStatusFilter" onchange="loadAdminListings('all')" class="px-4 py-2 border border-gray-300 rounded-lg">
+                            <option value="">All Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                            <option value="Sold">Sold</option>
+                        </select>
+                        <button onclick="loadAdminListings('all')" class="text-pink-600 hover:text-pink-700">
+                            <i class="fas fa-sync-alt mr-1"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                <div id="allListingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- Reported Items Content -->
+            <div id="reportedContent" class="hidden">
+                <div class="mb-4 flex justify-between items-center">
+                    <h3 class="text-xl font-semibold">Reported Listings</h3>
+                    <button onclick="loadReportedListings()" class="text-pink-600 hover:text-pink-700">
+                        <i class="fas fa-sync-alt mr-1"></i> Refresh
+                    </button>
+                </div>
+                <div id="reportedListingsGrid" class="space-y-4"></div>
+            </div>
+
+            <!-- Users Content -->
+            <div id="usersContent" class="hidden">
+                <div class="mb-4 flex justify-between items-center">
+                    <h3 class="text-xl font-semibold">User Management</h3>
+                    <button onclick="loadAllUsers()" class="text-pink-600 hover:text-pink-700">
+                        <i class="fas fa-sync-alt mr-1"></i> Refresh
+                    </button>
+                </div>
+                <div id="usersGrid" class="space-y-3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Action Modal -->
+<div id="adminActionModal" class="modal">
+    <div class="modal-content max-w-2xl">
+        <button onclick="closeModal('adminActionModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl">
+            <i class="fas fa-times"></i>
+        </button>
+        <div id="adminActionModalContent" class="p-8"></div>
+    </div>
+</div>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i id="toastIcon" class="fas fa-check-circle text-green-500 text-xl"></i>
+        <span id="toastMessage">Action completed successfully</span>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // API Base URL
+    const API_BASE = '@Url.Content("~/Marketplace/")';
+    
+    let filteredItems = [];
+    let displayedItems = [];
+    let itemsToShow = 20;
+    let isLoggedIn = false;
+    let currentItemId = null;
+    let userListings = [];
+    let selectedCategories = [];
+    let selectedConditions = [];
+    let currentPage = 1;
+    let totalPages = 1;
+
+    function init() {
+        checkAuthStatus();
+        loadCategories();
+        loadInitialItems();
+        setupEventListeners();
+    }
+
+    function checkAuthStatus() {
+        $.ajax({
+            url: '@Url.Action("CheckAuth", "Home")',
+            type: 'GET',
+            success: function(response) {
+                if (response.code === "1" && response.isAuthenticated) {
+                    isLoggedIn = true;
+                    updateAuthUI();
+                }
+            }
+        });
+    }
+
+    function loadCategories() {
+        $.ajax({
+            url: '/Home/GetCategories',
+            type: 'GET',
+            success: function(response) {
+                if (response.code === "1" && response.data) {
+                    // Categories are already in HTML, but you could dynamically generate them here
+                    console.log('Categories loaded:', response.data);
+                }
+            }
+        });
+    }
+
+    function loadInitialItems() {
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const location = document.getElementById('locationFilter').value.toLowerCase();
+        const minPrice = parseFloat(document.getElementById('minPrice').value) || null;
+        const maxPrice = parseFloat(document.getElementById('maxPrice').value) || null;
+        const sortBy = document.getElementById('sortBy').value;
+
+        selectedConditions = [];
+        document.querySelectorAll('[id^="cond-"]:checked').forEach(cb => {
+            selectedConditions.push(cb.value);
+        });
+
+        // Get selected category IDs
+        const categoryIds = [];
+        document.querySelectorAll('[id^="cat-"]:checked:not(#cat-all)').forEach(cb => {
+            const categoryName = cb.value;
+            // Map category name to ID (you'd need to store this mapping)
+            if (categoryName) categoryIds.push(getCategoryIdByName(categoryName));
+        });
+
+        const filterRequest = {
+            SearchTerm: search || null,
+            CategoryIds: categoryIds.length > 0 ? categoryIds : null,
+            Conditions: selectedConditions.length > 0 ? selectedConditions : null,
+            MinPrice: minPrice,
+            MaxPrice: maxPrice,
+            Location: location || null,
+            SortBy: sortBy,
+            PageNumber: currentPage,
+            PageSize: 20
+        };
+
+        $.ajax({
+            url: '/Home/GetListings',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(filterRequest),
+            success: function(response) {
+                if (response.code === "1" && response.data) {
+                    filteredItems = response.data.items || [];
+                    displayedItems = filteredItems;
+                    totalPages = response.data.totalPages;
+                    renderItems();
+                    updateLoadMoreButton();
+                    document.getElementById('itemCount').textContent = response.data.totalCount;
+                } else {
+                    showToast(response.message || 'Failed to load items', 'error');
+                }
+            },
+            error: function() {
+                showToast('An error occurred while loading items', 'error');
+            }
+        });
+    }
+
+    function getCategoryIdByName(name) {
+        const mapping = {
+            'Electronics': 1,
+            'Furniture': 2,
+            'Clothing': 3,
+            'Books': 4,
+            'Sports': 5
+        };
+        return mapping[name] || 0;
+    }
+
+    function renderItems() {
+        const grid = document.getElementById('itemsGrid');
+        
+        if (displayedItems.length === 0) {
+            grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-gray-500 text-lg">No items found</p></div>';
+            return;
+        }
+
+        grid.innerHTML = displayedItems.map(item => `
+            <div class="item-card" onclick="showItemDetail(${item.id})">
+                <div class="item-image-wrapper">
+                    <img src="${item.image}" alt="${item.title}" class="item-image">
+                    <div class="price-badge">R${item.price.toLocaleString()}</div>
+                    <div class="condition-badge">${item.condition}</div>
+                </div>
+                <div class="item-info">
+                    <strong class="item-title">${item.title}</strong>
+                    <div style="font-weight: 100; font-size: 12px">${item.category}</div>
+                    <div class="item-meta">
+                        <div class="item-meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${item.location}</span>
+                        </div>
+                        <div class="item-meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>${getTimeAgo(item.date)}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function loadMoreItems() {
+        if (currentPage >= totalPages) return;
+        
+        currentPage++;
+        
+        const btn = document.getElementById('loadMoreBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+
+        applyFilters();
+        
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-arrow-down"></i> <span>Load More Items</span>';
+    }
+
+    function showItemDetail(itemId) {
+        $.ajax({
+            url: '/Home/GetListingDetails',
+            type: 'GET',
+            data: { id: itemId },
+            success: function(response) {
+                if (response.code === "1" && response.data) {
+                    renderItemDetail(response.data);
+                } else {
+                    showToast(response.message || 'Failed to load item details', 'error');
+                }
+            },
+            error: function() {
+                showToast('An error occurred', 'error');
+            }
+        });
+    }
+
+    function renderItemDetail(item) {
+        currentItemId = item.id;
+        const modal = document.getElementById('itemModal');
+        const content = document.getElementById('itemModalContent');
+
+        content.innerHTML = `
+            <div class="image-carousel">
+                ${item.images.map((img, idx) => `
+                    <img src="${img}" alt="${item.title}" class="carousel-image ${idx === 0 ? 'active' : ''}" data-index="${idx}">
+                `).join('')}
+                ${item.images.length > 1 ? `
+                    <button class="carousel-btn prev" onclick="changeCarouselImage(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-btn next" onclick="changeCarouselImage(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="carousel-indicators">
+                        ${item.images.map((_, idx) => `
+                            <div class="carousel-indicator ${idx === 0 ? 'active' : ''}" onclick="goToCarouselImage(${idx})"></div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            </div>
+            <div class="p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-3">${item.title}</h2>
+                        <p class="text-4xl font-bold brand-color mb-4">R${item.price.toLocaleString()}</p>
+                    </div>
+                    <button onclick="reportListing(${item.id})" class="text-gray-400 hover:text-red-500 transition" title="Report Listing">
+                        <i class="fas fa-flag text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 py-4 border-y">
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">Condition</p>
+                        <p class="font-semibold text-gray-800">${item.condition}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">Category</p>
+                        <p class="font-semibold text-gray-800">${item.category}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">Location</p>
+                        <p class="font-semibold text-gray-800">${item.location}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">Posted</p>
+                        <p class="font-semibold text-gray-800">${getTimeAgo(item.date)}</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl p-5 mb-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                            ${item.seller.name.charAt(0)}
+                        </div>
+                        <div>
+                            <p class="font-semibold text-gray-800 flex items-center gap-2">
+                                ${item.seller.name} 
+                                ${item.seller.verified ? '<i class="fas fa-check-circle text-blue-500" title="Verified Seller"></i>' : ''}
+                            </p>
+                            <p class="text-sm text-gray-600">Member since ${item.seller.joinDate}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h3 class="font-bold text-xl mb-3">Description</h3>
+                    <p class="text-gray-700 leading-relaxed">${item.description}</p>
+                </div>
+                
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-4 mb-6">
+                    <p class="text-sm text-yellow-800"><i class="fas fa-shield-alt mr-2"></i><strong>Safety Tips:</strong> Meet in public places, inspect items before payment, never share personal financial information.</p>
+                </div>
+                
+                <button onclick="handleInterested(${item.userId})" class="w-full brand-bg text-white py-4 rounded-xl font-semibold text-lg hover:opacity-90 transition shadow-lg">
+                    <i class="fas fa-comment-dots mr-2"></i> I'm Interested
+                </button>
+                
+                ${item.similarItems && item.similarItems.length > 0 ? `
+                    <div class="mt-10">
+                        <h3 class="font-bold text-xl mb-5">Similar Items</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            ${item.similarItems.map(suggested => `
+                                <div class="item-card" onclick="closeModal('itemModal'); setTimeout(() => showItemDetail(${suggested.id}), 300)">
+                                    <div class="item-image-wrapper">
+                                        <img src="${suggested.image}" alt="${suggested.title}" class="item-image">
+                                    </div>
+                                    <div class="p-3">
+                                        <h4 class="font-semibold text-sm mb-2 truncate">${suggested.title}</h4>
+                                        <p class="text-lg font-bold brand-color">R${suggested.price.toLocaleString()}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+
+        modal.classList.add('active');
+    }
+
+    function handleInterested(sellerId) {
+        if (!isLoggedIn) {
+            closeModal('itemModal');
+            document.getElementById('loginRequiredModal').classList.add('active');
+        } else {
+            // Store seller ID for message sending
+            window.currentSellerId = sellerId;
+            closeModal('itemModal');
+            document.getElementById('messageModal').classList.add('active');
+        }
+    }
+
+    function sendMessage(event) {
+        event.preventDefault();
+        const messageText = document.getElementById('messageText').value;
+
+        $.ajax({
+            url: '/Home/SendMessage',
+            type: 'POST',
+            data: {
+                ListingId: currentItemId,
+                ReceiverId: window.currentSellerId,
+                MessageText: messageText
+            },
+            success: function(response) {
+                if (response.code === "1") {
+                    closeModal('messageModal');
+                    showToast('Message sent to seller!', 'success');
+                    document.getElementById('messageText').value = '';
+                } else {
+                    showToast(response.message || 'Failed to send message', 'error');
+                }
+            },
+            error: function() {
+                showToast('An error occurred', 'error');
+            }
+        });
+    }
+
+    //function submitListing(event) {
+    //    event.preventDefault();
+        
+    //    if (!isLoggedIn) {
+    //        showPage('auth');
+    //        showToast('Please login to create a listing', 'warning');
+    //        return;
+    //    }
+
+    //    const btn = document.getElementById('submitListingBtn');
+    //    btn.disabled = true;
+    //    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+    //    // First upload images
+    //    const formData = new FormData();
+    //    const imageInput = document.getElementById('imageUpload');
+        
+    //    for (let i = 0; i < imageInput.files.length; i++) {
+    //        formData.append('files', imageInput.files[i]);
+    //    }
+
+    //    if (imageInput.files.length > 0) {
+    //        $.ajax({
+    //            url: '/Home/UploadImages',
+    //            type: 'POST',
+    //            data: formData,
+    //            processData: false,
+    //            contentType: false,
+    //            success: function (uploadResponse) {
+    //                console.log('uploadResponse',uploadResponse)
+    //                if (uploadResponse.code === "1") {
+    //                    // Now create listing with uploaded image paths
+    //                    createListingWithImages(uploadResponse.data, btn);
+    //                    } else {
+    //                    btn.disabled = false;
+    //                    btn.innerHTML = '<i class="fas fa-check"></i> Submit Listing';
+    //                    showToast(uploadResponse.message || 'Failed to upload images', 'error');
+    //                }
+    //            },
+    //            error: function (err) {
+    //                console.log('err', err)
+    //                btn.disabled = false;
+    //                btn.innerHTML = '<i class="fas fa-check"></i> Submit Listing';
+    //                showToast('An error occurred while uploading images', 'error');
+    //            }
+    //        });
+    //    } else {
+    //        // No images, create listing without images
+    //        createListingWithImages([], btn);
+    //    }
+    //}
+
+    //function createListingWithImages(imagePaths, btn) {
+    //    const categoryName = document.getElementById('itemCategory').value;
+    //    const categoryId = getCategoryIdByName(categoryName);
+
+    //    const listingData = {
+    //        Title: document.getElementById('itemTitle').value,
+    //        Description: document.getElementById('itemDescription').value,
+    //        CategoryId: categoryId,
+    //        Price: parseFloat(document.getElementById('itemPrice').value),
+    //        Condition: document.getElementById('itemCondition').value,
+    //        Location: document.getElementById('itemLocation').value,
+    //        ImagePaths: imagePaths
+    //    };
+    //    console.log('listingData',listingData)
+    //    $.ajax({
+    //        url: '/Home/CreateListing',
+    //        type: 'POST',
+    //        contentType: 'application/json',
+    //        data: JSON.stringify(listingData),
+    //        success: function(response) {
+    //            btn.disabled = false;
+    //            btn.innerHTML = '<i class="fas fa-check"></i> Submit Listing';
+
+    //            if (response.code === "1") {
+    //                document.getElementById('createListingForm').reset();
+    //                document.getElementById('imagePreviewGrid').innerHTML = '';
+    //                selectedImages = [];
+    //                showToast('Your listing has been submitted for review!', 'success');
+    //                showPage('dashboard');
+    //                loadUserListings();
+    //            } else {
+    //                showToast(response.message || 'Failed to create listing', 'error');
+    //            }
+    //        },
+    //        error: function() {
+    //            btn.disabled = false;
+    //            btn.innerHTML = '<i class="fas fa-check"></i> Submit Listing';
+    //            showToast('An error occurred while creating listing', 'error');
+    //        }
+    //    });
+    //}
+
+    function submitListing(event) {
+        event.preventDefault();
+    
+        if (!isLoggedIn) {
+            showPage('auth');
+            showToast('Please login to create a listing', 'warning');
+            return;
+        }
+
+        // Validate images
+        if (selectedImages.length === 0) {
+            showToast('Please upload at least one image', 'warning');
+            return;
+        }
+
+        const btn = document.getElementById('submitListingBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Uploading images...';
+
+        // Create FormData with images
+        const formData = new FormData();
+        selectedImages.forEach((file, index) => {
+            formData.append('files', file);
+        });
+
+        // Upload images first
+        $.ajax({
+            url: '/Home/UploadImages',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            xhr: function() {
+                const xhr = new window.XMLHttpRequest();
+                // Upload progress
+                xhr.upload.addEventListener("progress", function(evt) {
+                    if (evt.lengthComputable) {
+                        const percentComplete = Math.round((evt.loaded / evt.total) * 100);
+                        btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Uploading... ${percentComplete}%`;
+                    }
+                }, false);
+                return xhr;
+            },
+            success: function (uploadResponse) {
+                if (uploadResponse.code === "1" && uploadResponse.data) {
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Creating listing...';
+                    createListingWithImages(uploadResponse.data, btn);
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-check mr-2"></i> Submit Listing';
+                    showToast(uploadResponse.message || 'Failed to upload images', 'error');
+                }
+            },
+            error: function (err) {
+                console.error('Upload error:', err);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check mr-2"></i> Submit Listing';
+                showToast('An error occurred while uploading images', 'error');
+            }
+        });
+    }
+
+    function createListingWithImages(imagePaths, btn) {
+        const categoryName = document.getElementById('itemCategory').value;
+        const categoryId = getCategoryIdByName(categoryName);
+
+        const listingData = {
+            Title: document.getElementById('itemTitle').value,
+            Description: document.getElementById('itemDescription').value,
+            CategoryId: categoryId,
+            Price: parseFloat(document.getElementById('itemPrice').value),
+            Condition: document.getElementById('itemCondition').value,
+            Location: document.getElementById('itemLocation').value,
+            ImagePaths: imagePaths
+        };
+
+        $.ajax({
+            url: '/Home/CreateListing',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(listingData),
+            success: function(response) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check mr-2"></i> Submit Listing';
+
+                if (response.code === "1") {
+                    resetCreateListingForm();
+                    showToast('Your listing has been submitted successfully!', 'success');
+                    showPage('dashboard');
+                    loadUserListings();
+                } else {
+                    showToast(response.message || 'Failed to create listing', 'error');
+                }
+            },
+            error: function(err) {
+                console.error('Create listing error:', err);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check mr-2"></i> Submit Listing';
+                showToast('An error occurred while creating listing', 'error');
+            }
+        });
+    }
+
+    function loadUserListings() {
+        $.ajax({
+            url: '/Home/GetMyListings',
+            type: 'GET',
+            success: function(response) {
+                if (response.code === "1" && response.data) {
+                    userListings = response.data;
+                    renderUserListings();
+                } else {
+                    showToast(response.message || 'Failed to load your listings', 'error');
+                }
+            },
+            error: function() {
+                showToast('An error occurred', 'error');
+            }
+        });
+    }
+
+    function renderUserListings() {
+        const grid = document.getElementById('myListingsGrid');
+        
+        if (userListings.length === 0) {
+            grid.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">No listings yet. <a href="#" onclick="showPage(\'create\')" class="brand-color hover:underline font-semibold">Create your first listing</a></p>';
+            return;
+        }
+
+        grid.innerHTML = userListings.map(item => `
+            <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <div class="item-image-wrapper">
+                    <img src="${item.image}" alt="${item.title}" class="item-image">
+                </div>
+                <div class="p-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-lg truncate flex-1">${item.title}</h3>
+                        <span class="text-xs px-3 py-1 rounded-full ${
+                            item.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
+                            item.status === 'Sold' ? 'bg-gray-100 text-gray-800' : 
+                            item.status === 'Approved' ? 'bg-green-100 text-green-800' :
+                            'bg-red-100 text-red-800'
+                        } font-semibold ml-2">${item.status}</span>
+                    </div>
+                    <p class="text-xl font-bold brand-color mb-2">R${item.price.toLocaleString()}</p>
+                    <p class="text-xs text-gray-500 mb-3">
+                        <i class="fas fa-eye mr-1"></i> ${item.viewCount} views
+                    </p>
+                    <div class="flex gap-2">
+                        <button onclick="editListing(${item.id})" class="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition text-sm font-medium">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button onclick="deleteListing(${item.id})" class="flex-1 bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100 transition text-sm font-medium">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                        ${item.status !== 'Sold' ? `
+                        <button onclick="markAsSold(${item.id})" class="flex-1 bg-green-50 text-green-600 py-2 rounded-lg hover:bg-green-100 transition text-sm font-medium">
+                            <i class="fas fa-check"></i> Sold
+                        </button>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function deleteListing(id) {
+        if (!confirm('Are you sure you want to delete this listing?')) {
+            return;
+        }
+
+        $.ajax({
+            url: '/Home/DeleteListing',
+            type: 'POST',
+            data: { id: id },
+            success: function(response) {
+                if (response.code === "1") {
+                    showToast('Listing deleted successfully', 'success');
+                    loadUserListings();
+                } else {
+                    showToast(response.message || 'Failed to delete listing', 'error');
+                }
+            },
+            error: function() {
+                showToast('An error occurred', 'error');
+            }
+        });
+    }
+
+    function markAsSold(id) {
+        $.ajax({
+            url: '/Home/MarkAsSold',
+            type: 'POST',
+            data: { id: id },
+            success: function(response) {
+                if (response.code === "1") {
+                    showToast('Marked as sold!', 'success');
+                    loadUserListings();
+                } else {
+                    showToast(response.message || 'Failed to mark as sold', 'error');
+                }
+            },
+            error: function() {
+                showToast('An error occurred', 'error');
+            }
+        });
+    }
+
+    function editListing(id) {
+        // You can implement edit functionality by pre-filling the create form
+        showToast('Edit functionality - redirect to edit page with pre-filled data', 'info');
+    }
+
+    function loadMessages() {
+        $.ajax({
+            url: '/Home/GetMessages',
+            type: 'GET',
+            success: function(response) {
+                if (response.code === "1" && response.data) {
+                    renderMessages(response.data);
+                } else {
+                    showToast(response.message || 'Failed to load messages', 'error');
+                }
+            },
+            error: function() {
+                showToast('An error occurred', 'error');
+            }
+        });
+    }
+
+    function renderMessages(messages) {
+        const list = document.getElementById('messagesList');
+        
+        if (messages.length === 0) {
+            list.innerHTML = '<p class="text-gray-500 text-center py-8">No messages yet</p>';
+            return;
+        }
+
+        list.innerHTML = messages.map(msg => `
+            <div class="bg-white border ${msg.unread ? 'border-pink-300 shadow-md' : 'border-gray-200'} rounded-xl p-5 hover:shadow-lg transition cursor-pointer">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <h4 class="font-bold text-gray-800">${msg.buyer}</h4>
+                        <p class="text-sm text-gray-600">Re: ${msg.item}</p>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <span class="text-xs text-gray-500">${msg.time}</span>
+                        ${msg.unread ? '<span class="mt-1 px-2 py-1 bg-pink-500 text-white text-xs rounded-full font-semibold">New</span>' : ''}
+                    </div>
+                </div>
+                <p class="text-gray-700 mt-2">${msg.lastMessage}</p>
+            </div>
+        `).join('');
+    }
+
+    function reportListing(listingId) {
+        if (!isLoggedIn) {
+            closeModal('itemModal');
+            showToast('Please login to report listings', 'warning');
+            showPage('auth');
+            return;
+        }
+
+        const reason = prompt('Please provide a reason for reporting this listing:');
+        if (!reason || reason.trim() === '') {
+            return;
+        }
+
+        $.ajax({
+            url: '/Home/ReportListing',
+            type: 'POST',
+            data: {
+                ListingId: listingId,
+                ReasonText: reason
+            },
+            success: function(response) {
+                if (response.code === "1") {
+                    showToast('Listing reported. Our team will review it shortly.', 'success');
+                    closeModal('itemModal');
+                } else {
+                    showToast(response.message || 'Failed to report listing', 'error');
+                }
+            },
+            error: function() {
+                showToast('An error occurred', 'error');
+            }
+        });
+    }
+
+    function handleLogin(event) {
+        event.preventDefault();
+        const form = event.target;
+        const email = form.querySelector('input[type="email"]').value;
+        const password = form.querySelector('input[type="password"]').value;
+
+        $.ajax({
+            url: '@Url.Action("LoginUser", "Home")',
+            type: 'POST',
+            data: {
+                username: email,
+                password: password
+            },
+            success: function (response) {
+                console.log('response',response)
+                if (response.code === "1") {
+                    isLoggedIn = true;
+                    isAdmin = response.isAdmin;
+                    updateAuthUI();
+                    showToast('Login successful! Welcome back!', 'success');
+                    showPage('browse');
+                } else {
+                    showToast(response.message || 'Login failed', 'error');
+                }
+            },
+            error: function() {
+                showToast('An error occurred during login', 'error');
+            }
+        });
+    }
+
+    function handleRegister(event) {
+        event.preventDefault();
+        const form = event.target;
+        const name = form.querySelector('input[type="text"]').value;
+        const email = form.querySelector('input[type="email"]').value;
+        const password = form.querySelector('#regPassword').value;
+        const confirmPassword = form.querySelector('#regConfirmPassword').value;
+
+        if (password !== confirmPassword) {
+            showToast('Passwords do not match', 'error');
+            return;
+        }
+
+        const nameParts = name.split(' ');
+        const firstname = nameParts[0] || '';
+        const lastname = nameParts.slice(1).join(' ') || nameParts[0];
+        console.log({
+                firstname: firstname,
+                lastname: lastname,
+                email: email,
+                phone: '',
+                password: password,
+                tnc: true
+        })
+
+        $.ajax({
+            //url: '@Url.Action("Register", "Home")',
+            url: '/Home/Register',
+            type: 'POST',
+            data: {
+                firstname: firstname,
+                lastname: lastname,
+                email: email,
+                phone: '',
+                password: password,
+                tnc: true
+            },
+            success: function(response) {
+                if (response.code === "1") {
+                    showToast('Registration successful! Please verify your email.', 'success');
+                    switchAuthTab('login');
+                } else {
+                    showToast(response.message || 'Registration failed', 'error');
+                }
+            },
+            error: function (err) {
+                console.log(err)
+                showToast('An error occurred during registration', 'error');
+            }
+        });
+    }
+
+    function handleForgotPassword(event) {
+        event.preventDefault();
+        const email = event.target.querySelector('input[type="email"]').value;
+
+        $.ajax({
+            url: '@Url.Action("ForgotPasswordRequest", "Home")',
+            type: 'POST',
+            data: { email: email },
+            success: function(response) {
+                if (response.code === "1") {
+                    showToast('Password reset link sent to your email', 'success');
+                    switchAuthTab('login');
+                } else {
+                    showToast(response.message || 'Failed to send reset link', 'error');
+                }
+            },
+            error: function() {
+                showToast('An error occurred', 'error');
+            }
+        });
+    }
+
+    function logout() {
+        $.ajax({
+            url: '@Url.Action("Logout", "Home")',
+            type: 'POST',
+            success: function(response) {
+                isLoggedIn = false;
+                updateAuthUI();
+                showToast('Logged out successfully', 'success');
+                showPage('browse');
+                document.getElementById('userMenu').classList.add('hidden');
+            },
+            error: function() {
+                showToast('An error occurred during logout', 'error');
+            }
+        });
+    }
+
+    // Rest of the existing helper functions remain the same
+    function setupEventListeners() {
+        document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 300));
+    }
+
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    function getTimeAgo(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) return 'Today';
+        if (diffDays === 1) return 'Yesterday';
+        if (diffDays <= 7) return `${diffDays} days ago`;
+        if (diffDays <= 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+        return `${Math.floor(diffDays / 30)} months ago`;
+    }
+
+    function updateLoadMoreButton() {
+        const container = document.getElementById('loadMoreContainer');
+        if (currentPage >= totalPages) {
+            container.classList.add('hidden');
+        } else {
+            container.classList.remove('hidden');
+        }
+    }
+
+    function handleCategoryFilter(checkbox) {
+        if (checkbox.value === '') {
+            document.querySelectorAll('[id^="cat-"]').forEach(cb => {
+                if (cb.id !== 'cat-all') cb.checked = false;
+            });
+            selectedCategories = [];
+        } else {
+            document.getElementById('cat-all').checked = false;
+            if (checkbox.checked) {
+                selectedCategories.push(checkbox.value);
+            } else {
+                selectedCategories = selectedCategories.filter(c => c !== checkbox.value);
+            }
+            
+            if (selectedCategories.length === 0) {
+                document.getElementById('cat-all').checked = true;
+            }
+        }
+        currentPage = 1;
+        applyFilters();
+    }
+
+    function clearAllFilters() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('locationFilter').value = '';
+        document.getElementById('minPrice').value = '';
+        document.getElementById('maxPrice').value = '';
+        document.getElementById('cat-all').checked = true;
+        document.querySelectorAll('[id^="cat-"]:not(#cat-all)').forEach(cb => cb.checked = false);
+        document.querySelectorAll('[id^="cond-"]').forEach(cb => cb.checked = false);
+        selectedCategories = [];
+        selectedConditions = [];
+        currentPage = 1;
+        applyFilters();
+        showToast('Filters cleared', 'info');
+    }
+
+    function toggleMobileFilters() {
+        document.getElementById('filterSidebar').classList.toggle('active');
+        document.getElementById('filterOverlay').classList.toggle('active');
+    }
+
+    let currentCarouselIndex = 0;
+    function changeCarouselImage(direction) {
+        const images = document.querySelectorAll('.carousel-image');
+        const indicators = document.querySelectorAll('.carousel-indicator');
+        
+        images[currentCarouselIndex].classList.remove('active');
+        indicators[currentCarouselIndex]?.classList.remove('active');
+        
+        currentCarouselIndex = (currentCarouselIndex + direction + images.length) % images.length;
+        
+        images[currentCarouselIndex].classList.add('active');
+        indicators[currentCarouselIndex]?.classList.add('active');
+    }
+
+    function goToCarouselImage(index) {
+        const images = document.querySelectorAll('.carousel-image');
+        const indicators = document.querySelectorAll('.carousel-indicator');
+        
+        images[currentCarouselIndex].classList.remove('active');
+        indicators[currentCarouselIndex]?.classList.remove('active');
+        
+        currentCarouselIndex = index;
+        
+        images[currentCarouselIndex].classList.add('active');
+        indicators[currentCarouselIndex]?.classList.add('active');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+        currentCarouselIndex = 0;
+    }
+
+    function showPage(page) {
+        document.getElementById('browsePage').classList.add('hidden');
+        document.getElementById('createPage').classList.add('hidden');
+        document.getElementById('dashboardPage').classList.add('hidden');
+        document.getElementById('authPage').classList.add('hidden');
+
+        if (page === 'browse') {
+            document.getElementById('browsePage').classList.remove('hidden');
+        } else if (page === 'create') {
+            if (!isLoggedIn) {
+                showPage('auth');
+                showToast('Please login to create a listing', 'warning');
+                return;
+            }
+            document.getElementById('createPage').classList.remove('hidden');
+        } else if (page === 'dashboard') {
+            if (!isLoggedIn) {
+                showPage('auth');
+                showToast('Please login to view dashboard', 'warning');
+                return;
+            }
+            document.getElementById('dashboardPage').classList.remove('hidden');
+            loadUserListings();
+        } else if (page === 'auth') {
+            document.getElementById('authPage').classList.remove('hidden');
+        }
+    }
+
+    //let selectedImages = [];
+    //function previewImages(event) {
+    //    const files = Array.from(event.target.files);
+    //    if (files.length > 5) {
+    //        showToast('Maximum 5 images allowed', 'warning');
+    //        event.target.value = '';
+    //        return;
+    //    }
+
+    //    // Validate file sizes
+    //    for (let file of files) {
+    //        if (file.size > 10 * 1024 * 1024) {
+    //            showToast('Each image must be less than 10MB', 'warning');
+    //            event.target.value = '';
+    //            return;
+    //        }
+    //    }
+
+    //    selectedImages = files.slice(0, 5);
+    //    const grid = document.getElementById('imagePreviewGrid');
+    //    grid.innerHTML = selectedImages.map((file, idx) => {
+    //        const url = URL.createObjectURL(file);
+    //        return `
+    //            <div style="position: relative; padding-bottom: 100%; border-radius: 8px; overflow: hidden; border: 2px solid #ddd;">
+    //                <img src="${url}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+    //                <button type="button" onclick="removeImage(${idx})" style="position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;">
+    //                    ×
+    //                </button>
+    //            </div>
+    //        `;
+    //    }).join('');
+    //}
+
+    //function removeImage(index) {
+    //    selectedImages.splice(index, 1);
+    //    const dt = new DataTransfer();
+    //    selectedImages.forEach(file => dt.items.add(file));
+    //    document.getElementById('imageUpload').files = dt.files;
+    //    previewImages({ target: { files: dt.files } });
+    //}
+
+    let selectedImages = [];
+    let imageDataTransfer = new DataTransfer();
+
+    function previewImages(event) {
+        const files = Array.from(event.target.files);
+    
+        // Check total count
+        if (selectedImages.length + files.length > 5) {
+            showToast('Maximum 5 images allowed', 'warning');
+            event.target.value = '';
+            return;
+        }
+
+        // Validate each file
+        for (let file of files) {
+            if (file.size > 10 * 1024 * 1024) {
+                showToast('Each image must be less than 10MB', 'warning');
+                event.target.value = '';
+                return;
+            }
+        
+            // Check if it's actually an image
+            if (!file.type.startsWith('image/')) {
+                showToast('Only image files are allowed', 'warning');
+                event.target.value = '';
+                return;
+            }
+        }
+
+        // Add new files to selectedImages
+        files.forEach(file => {
+            if (selectedImages.length < 5) {
+                selectedImages.push(file);
+                imageDataTransfer.items.add(file);
+            }
+        });
+
+        // Update the file input
+        document.getElementById('imageUpload').files = imageDataTransfer.files;
+    
+        // Render preview
+        renderImagePreviews();
+    }
+
+    function renderImagePreviews() {
+        const grid = document.getElementById('imagePreviewGrid');
+    
+        if (selectedImages.length === 0) {
+            grid.innerHTML = '';
+            return;
+        }
+    
+        grid.innerHTML = selectedImages.map((file, idx) => {
+            const url = URL.createObjectURL(file);
+            return `
+                <div class="relative" style="padding-bottom: 100%; border-radius: 8px; overflow: hidden; border: 2px solid #e5e7eb;">
+                    <img src="${url}" class="absolute inset-0 w-full h-full object-cover" alt="Preview ${idx + 1}">
+                    <button type="button" 
+                            onclick="removeImage(${idx})" 
+                            class="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center transition-colors"
+                            title="Remove image">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                    <div class="absolute bottom-1 left-1 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded">
+                        ${idx + 1} of 5
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function removeImage(index) {
+        // Remove from selectedImages array
+        selectedImages.splice(index, 1);
+    
+        // Rebuild DataTransfer
+        imageDataTransfer = new DataTransfer();
+        selectedImages.forEach(file => {
+            imageDataTransfer.items.add(file);
+        });
+    
+        // Update file input
+        document.getElementById('imageUpload').files = imageDataTransfer.files;
+    
+        // Re-render previews
+        renderImagePreviews();
+    
+        showToast(`Image removed. ${selectedImages.length} of 5 images selected`, 'info');
+    }
+
+    function resetCreateListingForm() {
+        document.getElementById('createListingForm').reset();
+        selectedImages = [];
+        imageDataTransfer = new DataTransfer();
+        document.getElementById('imageUpload').files = imageDataTransfer.files;
+        document.getElementById('imagePreviewGrid').innerHTML = '';
+    }
+
+    function switchAuthTab(tab) {
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('registerForm').classList.add('hidden');
+        document.getElementById('forgotForm').classList.add('hidden');
+
+        document.getElementById('loginTabBtn').classList.remove('border-pink-600', 'text-pink-600');
+        document.getElementById('registerTabBtn').classList.remove('border-pink-600', 'text-pink-600');
+
+        if (tab === 'login') {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('loginTabBtn').classList.add('border-pink-600', 'text-pink-600');
+        } else if (tab === 'register') {
+            document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('registerTabBtn').classList.add('border-pink-600', 'text-pink-600');
+        } else if (tab === 'forgot') {
+            document.getElementById('forgotForm').classList.remove('hidden');
+        }
+    }
+
+    //function updateAuthUI() {
+    //    if (isLoggedIn) {
+    //        document.getElementById('loginBtn').style.display = 'none';
+    //        document.getElementById('createListingBtn').style.display = 'block';
+    //        document.getElementById('userMenuBtn').style.display = 'block';
+    //        document.getElementById('dashboardLink').style.display = 'block';
+    //    } else {
+    //        document.getElementById('loginBtn').style.display = 'block';
+    //        document.getElementById('createListingBtn').style.display = 'none';
+    //        document.getElementById('userMenuBtn').style.display = 'none';
+    //        document.getElementById('dashboardLink').style.display = 'none';
+    //    }
+    //}
+
+    //function toggleUserMenu() {
+    //    document.getElementById('userMenu').classList.toggle('hidden');
+    //}
+
+    function switchTab(tab) {
+        document.getElementById('listingsContent').classList.add('hidden');
+        document.getElementById('messagesContent').classList.add('hidden');
+        document.getElementById('profileContent').classList.add('hidden');
+
+        document.getElementById('listingsTab').classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
+        document.getElementById('messagesTab').classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
+        document.getElementById('profileTab').classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
+
+        if (tab === 'listings') {
+            document.getElementById('listingsContent').classList.remove('hidden');
+            document.getElementById('listingsTab').classList.add('border-b-2', 'border-pink-600', 'text-pink-600');
+        } else if (tab === 'messages') {
+            document.getElementById('messagesContent').classList.remove('hidden');
+            document.getElementById('messagesTab').classList.add('border-b-2', 'border-pink-600', 'text-pink-600');
+            loadMessages();
+        } else if (tab === 'profile') {
+            document.getElementById('profileContent').classList.remove('hidden');
+            document.getElementById('profileTab').classList.add('border-b-2', 'border-pink-600', 'text-pink-600');
+        }
+    }
+
+    function updateProfile() {
+        showToast('Profile update functionality would connect to your user update API', 'info');
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        const icon = document.getElementById('toastIcon');
+        const messageEl = document.getElementById('toastMessage');
+
+        const icons = {
+            success: 'fa-check-circle text-green-500',
+            error: 'fa-times-circle text-red-500',
+            warning: 'fa-exclamation-circle text-yellow-500',
+            info: 'fa-info-circle text-blue-500'
+        };
+
+        icon.className = `fas ${icons[type]} text-xl`;
+        messageEl.textContent = message;
+        toast.classList.add('active');
+
+        setTimeout(() => {
+            toast.classList.remove('active');
+        }, 3500);
+    }
+
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.classList.remove('active');
+            currentCarouselIndex = 0;
+        }
+    };
+
+    document.addEventListener('click', function(event) {
+        const userMenu = document.getElementById('userMenu');
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        if (userMenu && userMenuBtn && !userMenu.contains(event.target) && !userMenuBtn.contains(event.target)) {
+            userMenu.classList.add('hidden');
+        }
+    });
+
+
+    // Admin state
+let isAdmin = false;
+let currentAdminListing = null;
+
+// Update checkAuthStatus function
+function checkAuthStatus() {
+    $.ajax({
+        url: '@Url.Action("CheckAuth", "Home")',
+        type: 'GET',
+        success: function(response) {
+            if (response.code === "1" && response.isAuthenticated) {
+                isLoggedIn = true;
+                isAdmin = response.isAdmin || false; // Add this line
+                updateAuthUI();
+            }
+        }
+    });
+}
+
+// Update updateAuthUI function
+// Update updateAuthUI function
+function updateAuthUI() {
+    const loginBtn = document.getElementById('loginBtn');
+    const createListingBtn = document.getElementById('createListingBtn');
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const dashboardLink = document.getElementById('dashboardLink');
+    
+    if (!loginBtn || !createListingBtn || !userMenuBtn || !dashboardLink) {
+        console.error('Required UI elements not found');
+        return;
+    }
+    
+    if (isLoggedIn) {
+        loginBtn.style.display = 'none';
+        createListingBtn.style.display = 'block';
+        userMenuBtn.style.display = 'block';
+        dashboardLink.style.display = 'block';
+    } else {
+        loginBtn.style.display = 'block';
+        createListingBtn.style.display = 'none';
+        userMenuBtn.style.display = 'none';
+        dashboardLink.style.display = 'none';
+    }
+}
+
+// Update toggleUserMenu to handle admin
+function toggleUserMenu() {
+    if (isAdmin) {
+        document.getElementById('adminMenu').classList.toggle('hidden');
+    } else {
+        document.getElementById('userMenu').classList.toggle('hidden');
+    }
+}
+
+// Update showPage function to include admin
+function showPage(page) {
+    document.getElementById('browsePage').classList.add('hidden');
+    document.getElementById('createPage').classList.add('hidden');
+    document.getElementById('dashboardPage').classList.add('hidden');
+    document.getElementById('authPage').classList.add('hidden');
+    document.getElementById('adminPage')?.classList.add('hidden');
+
+    if (page === 'browse') {
+        document.getElementById('browsePage').classList.remove('hidden');
+    } else if (page === 'create') {
+        if (!isLoggedIn) {
+            showPage('auth');
+            showToast('Please login to create a listing', 'warning');
+            return;
+        }
+        document.getElementById('createPage').classList.remove('hidden');
+    } else if (page === 'dashboard') {
+        if (!isLoggedIn) {
+            showPage('auth');
+            showToast('Please login to view dashboard', 'warning');
+            return;
+        }
+        document.getElementById('dashboardPage').classList.remove('hidden');
+        loadUserListings();
+    } else if (page === 'auth') {
+        document.getElementById('authPage').classList.remove('hidden');
+    } else if (page === 'admin') {
+        if (!isAdmin) {
+            showPage('browse');
+            showToast('Access denied', 'error');
+            return;
+        }
+        document.getElementById('adminPage').classList.remove('hidden');
+        loadAdminDashboard();
+    }
+}
+
+// Admin Dashboard Functions
+function loadAdminDashboard() {
+    loadAdminStats();
+    loadAdminListings('pending');
+}
+
+function loadAdminStats() {
+    $.ajax({
+        url: '/Home/GetAdminStats',
+        type: 'GET',
+        success: function(response) {
+            if (response.code === "1" && response.data) {
+                document.getElementById('pendingCount').textContent = response.data.pendingCount || 0;
+                document.getElementById('totalListingsCount').textContent = response.data.totalListings || 0;
+                document.getElementById('reportsCount').textContent = response.data.reportsCount || 0;
+            }
+        },
+        error: function() {
+            showToast('Failed to load admin stats', 'error');
+        }
+    });
+}
+
+function switchAdminTab(tab) {
+    // Hide all content
+    document.getElementById('pendingContent').classList.add('hidden');
+    document.getElementById('allListingsContent').classList.add('hidden');
+    document.getElementById('reportedContent').classList.add('hidden');
+    document.getElementById('usersContent').classList.add('hidden');
+
+    // Remove active state from all tabs
+    document.getElementById('pendingTab').classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
+    document.getElementById('allListingsTab').classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
+    document.getElementById('reportedTab').classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
+    document.getElementById('usersTab').classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
+
+    // Show selected content and activate tab
+    if (tab === 'pending') {
+        document.getElementById('pendingContent').classList.remove('hidden');
+        document.getElementById('pendingTab').classList.add('border-b-2', 'border-pink-600', 'text-pink-600');
+        loadAdminListings('pending');
+    } else if (tab === 'all') {
+        document.getElementById('allListingsContent').classList.remove('hidden');
+        document.getElementById('allListingsTab').classList.add('border-b-2', 'border-pink-600', 'text-pink-600');
+        loadAdminListings('all');
+    } else if (tab === 'reported') {
+        document.getElementById('reportedContent').classList.remove('hidden');
+        document.getElementById('reportedTab').classList.add('border-b-2', 'border-pink-600', 'text-pink-600');
+        loadReportedListings();
+    } else if (tab === 'users') {
+        document.getElementById('usersContent').classList.remove('hidden');
+        document.getElementById('usersTab').classList.add('border-b-2', 'border-pink-600', 'text-pink-600');
+        loadAllUsers();
+    }
+}
+
+function loadAdminListings(type) {
+    const status = type === 'pending' ? 'Pending' : document.getElementById('adminStatusFilter')?.value || '';
+    
+    $.ajax({
+        url: '/Home/GetAdminListings',
+        type: 'GET',
+        data: { status: status },
+        success: function(response) {
+            if (response.code === "1" && response.data) {
+                if (type === 'pending') {
+                    renderAdminListings(response.data, 'pendingListingsGrid');
+                } else {
+                    renderAdminListings(response.data, 'allListingsGrid');
+                }
+            } else {
+                showToast(response.message || 'Failed to load listings', 'error');
+            }
+        },
+        error: function() {
+            showToast('An error occurred', 'error');
+        }
+    });
+}
+
+function renderAdminListings(listings, gridId) {
+    const grid = document.getElementById(gridId);
+    
+    if (listings.length === 0) {
+        grid.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">No listings found</p>';
+        return;
+    }
+
+    grid.innerHTML = listings.map(item => `
+        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition">
+            <div class="item-image-wrapper">
+                <img src="${item.image}" alt="${item.title}" class="item-image">
+                <div class="absolute top-2 right-2">
+                    <span class="text-xs px-3 py-1 rounded-full ${
+                        item.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
+                        item.status === 'Sold' ? 'bg-gray-100 text-gray-800' : 
+                        item.status === 'Approved' ? 'bg-green-100 text-green-800' :
+                        'bg-red-100 text-red-800'
+                    } font-semibold">${item.status}</span>
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="font-bold text-lg mb-2 truncate">${item.title}</h3>
+                <p class="text-xl font-bold brand-color mb-2">R${item.price.toLocaleString()}</p>
+                <div class="text-sm text-gray-600 mb-3">
+                    <p><i class="fas fa-user mr-1"></i> ${item.seller || 'Unknown'}</p>
+                    <p><i class="fas fa-map-marker-alt mr-1"></i> ${item.location}</p>
+                    <p><i class="fas fa-clock mr-1"></i> ${getTimeAgo(item.date)}</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="viewListingDetails(${item.id})" class="flex-1 bg-blue-50 text-blue-600 py-2 rounded-lg hover:bg-blue-100 transition text-sm font-medium">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                    ${item.status === 'Pending' ? `
+                        <button onclick="approveListingAdmin(${item.id})" class="flex-1 bg-green-50 text-green-600 py-2 rounded-lg hover:bg-green-100 transition text-sm font-medium">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button onclick="rejectListingAdmin(${item.id})" class="flex-1 bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100 transition text-sm font-medium">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                    ` : `
+                        <button onclick="deleteListingAdmin(${item.id})" class="flex-1 bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100 transition text-sm font-medium">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    `}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function viewListingDetails(listingId) {
+    showItemDetail(listingId);
+}
+
+function approveListingAdmin(listingId) {
+    if (!confirm('Approve this listing?')) return;
+
+    $.ajax({
+        url: '/Home/ApproveListing',
+        type: 'POST',
+        data: { id: listingId },
+        success: function(response) {
+            if (response.code === "1") {
+                showToast('Listing approved successfully', 'success');
+                loadAdminStats();
+                loadAdminListings('pending');
+            } else {
+                showToast(response.message || 'Failed to approve listing', 'error');
+            }
+        },
+        error: function() {
+            showToast('An error occurred', 'error');
+        }
+    });
+}
+
+function rejectListingAdmin(listingId) {
+    const reason = prompt('Please provide a reason for rejection:');
+    if (!reason || reason.trim() === '') return;
+
+    $.ajax({
+        url: '/Home/RejectListing',
+        type: 'POST',
+        data: { 
+            id: listingId,
+            reason: reason 
+        },
+        success: function(response) {
+            if (response.code === "1") {
+                showToast('Listing rejected', 'success');
+                loadAdminStats();
+                loadAdminListings('pending');
+            } else {
+                showToast(response.message || 'Failed to reject listing', 'error');
+            }
+        },
+        error: function() {
+            showToast('An error occurred', 'error');
+        }
+    });
+}
+
+function deleteListingAdmin(listingId) {
+    if (!confirm('Are you sure you want to permanently delete this listing? This action cannot be undone.')) {
+        return;
+    }
+
+    $.ajax({
+        url: '/Home/AdminDeleteListing',
+        type: 'POST',
+        data: { id: listingId },
+        success: function(response) {
+            if (response.code === "1") {
+                showToast('Listing deleted successfully', 'success');
+                loadAdminStats();
+                switchAdminTab('all'); // Reload current tab
+            } else {
+                showToast(response.message || 'Failed to delete listing', 'error');
+            }
+        },
+        error: function() {
+            showToast('An error occurred', 'error');
+        }
+    });
+}
+
+function loadReportedListings() {
+    $.ajax({
+        url: '/Home/GetReportedListings',
+        type: 'GET',
+        success: function(response) {
+            if (response.code === "1" && response.data) {
+                renderReportedListings(response.data);
+            } else {
+                showToast(response.message || 'Failed to load reported listings', 'error');
+            }
+        },
+        error: function() {
+            showToast('An error occurred', 'error');
+        }
+    });
+}
+
+function renderReportedListings(reports) {
+    const grid = document.getElementById('reportedListingsGrid');
+    
+    if (reports.length === 0) {
+        grid.innerHTML = '<p class="text-gray-500 text-center py-8">No reported listings</p>';
+        return;
+    }
+
+    grid.innerHTML = reports.map(report => `
+        <div class="bg-white border border-red-200 rounded-xl p-5 hover:shadow-lg transition">
+            <div class="flex gap-4">
+                <img src="${report.listingImage}" alt="${report.listingTitle}" class="w-24 h-24 object-cover rounded-lg">
+                <div class="flex-1">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-bold text-lg">${report.listingTitle}</h4>
+                        <span class="text-xs px-3 py-1 rounded-full bg-red-100 text-red-800 font-semibold">
+                            ${report.reportCount} Report${report.reportCount > 1 ? 's' : ''}
+                        </span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-3">
+                        <i class="fas fa-user mr-1"></i> Seller: ${report.sellerName}
+                    </p>
+                    <div class="bg-red-50 rounded-lg p-3 mb-3">
+                        <p class="text-sm text-red-800"><strong>Latest Report:</strong></p>
+                        <p class="text-sm text-red-700">"${report.latestReason}"</p>
+                        <p class="text-xs text-red-600 mt-1">Reported by: ${report.reporterName} - ${getTimeAgo(report.reportDate)}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="viewListingDetails(${report.listingId})" class="bg-blue-50 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-100 transition text-sm font-medium">
+                            <i class="fas fa-eye mr-1"></i> View Listing
+                        </button>
+                        <button onclick="dismissReport(${report.reportId})" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition text-sm font-medium">
+                            <i class="fas fa-check mr-1"></i> Dismiss
+                        </button>
+                        <button onclick="deleteListingAdmin(${report.listingId})" class="bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition text-sm font-medium">
+                            <i class="fas fa-trash mr-1"></i> Delete Listing
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function dismissReport(reportId) {
+    $.ajax({
+        url: '/Home/DismissReport',
+        type: 'POST',
+        data: { id: reportId },
+        success: function(response) {
+            if (response.code === "1") {
+                showToast('Report dismissed', 'success');
+                loadReportedListings();
+                loadAdminStats();
+            } else {
+                showToast(response.message || 'Failed to dismiss report', 'error');
+            }
+        },
+        error: function() {
+            showToast('An error occurred', 'error');
+        }
+    });
+}
+
+function loadAllUsers() {
+    $.ajax({
+        url: '/Home/GetAllUsers',
+        type: 'GET',
+        success: function(response) {
+            if (response.code === "1" && response.data) {
+                renderUsers(response.data);
+            } else {
+                showToast(response.message || 'Failed to load users', 'error');
+            }
+        },
+        error: function() {
+            showToast('An error occurred', 'error');
+        }
+    });
+}
+
+function renderUsers(users) {
+    const grid = document.getElementById('usersGrid');
+    
+    if (users.length === 0) {
+        grid.innerHTML = '<p class="text-gray-500 text-center py-8">No users found</p>';
+        return;
+    }
+
+    grid.innerHTML = users.map(user => `
+        <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                        ${user.name.charAt(0)}
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800 flex items-center gap-2">
+                            ${user.name}
+                            ${user.isAdmin ? '<span class="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full font-semibold">Admin</span>' : ''}
+                        </p>
+                        <p class="text-sm text-gray-600">${user.email}</p>
+                        <p class="text-xs text-gray-500">Joined: ${user.joinDate} • ${user.listingsCount} listings</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="viewUserListings(${user.id})" class="bg-blue-50 text-blue-600 px-3 py-2 rounded-lg hover:bg-blue-100 transition text-sm">
+                        <i class="fas fa-list"></i> Listings
+                    </button>
+                    ${!user.isAdmin ? `
+                        <button onclick="toggleUserStatus(${user.id}, ${user.isActive})" class="bg-${user.isActive ? 'red' : 'green'}-50 text-${user.isActive ? 'red' : 'green'}-600 px-3 py-2 rounded-lg hover:bg-${user.isActive ? 'red' : 'green'}-100 transition text-sm">
+                            <i class="fas fa-${user.isActive ? 'ban' : 'check'}"></i> ${user.isActive ? 'Suspend' : 'Activate'}
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function viewUserListings(userId) {
+    showToast('View user listings functionality', 'info');
+    // You can implement this to filter listings by user
+}
+
+function toggleUserStatus(userId, currentStatus) {
+    const action = currentStatus ? 'suspend' : 'activate';
+    if (!confirm(`Are you sure you want to ${action} this user?`)) return;
+
+    $.ajax({
+        url: '/Home/ToggleUserStatus',
+        type: 'POST',
+        data: { 
+            userId: userId,
+            isActive: !currentStatus 
+        },
+        success: function(response) {
+            if (response.code === "1") {
+                showToast(`User ${action}d successfully`, 'success');
+                loadAllUsers();
+            } else {
+                showToast(response.message || `Failed to ${action} user`, 'error');
+            }
+        },
+        error: function() {
+            showToast('An error occurred', 'error');
+        }
+    });
+}
+
+// Update document click handler for admin menu
+document.addEventListener('click', function(event) {
+    const userMenu = document.getElementById('userMenu');
+    const adminMenu = document.getElementById('adminMenu');
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    
+    if (userMenu && userMenuBtn && !userMenu.contains(event.target) && !userMenuBtn.contains(event.target)) {
+        userMenu.classList.add('hidden');
+    }
+    
+    if (adminMenu && userMenuBtn && !adminMenu.contains(event.target) && !userMenuBtn.contains(event.target)) {
+        adminMenu.classList.add('hidden');
+    }
+});
+
+    // Initialize on page load
+    init();
+</script>

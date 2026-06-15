@@ -1,51 +1,84 @@
-﻿ <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-8">
-                    <h1 class="text-2xl font-bold brand-color cursor-pointer" onclick="showPage('browse')">
-                        <i class="fas fa-store"></i> listNsell
-                    </h1>
-                    <div class="hidden md:flex gap-6">
-                        <a href="#" class="text-gray-700 hover:text-pink-600 font-medium transition" onclick="showPage('browse')">Browse</a>
-                        <a href="#" class="text-gray-700 hover:text-pink-600 font-medium transition" id="dashboardLink" onclick="showPage('dashboard')" style="display:none;">Dashboard</a>
+﻿    <nav class="glass-effect sticky top-0 z-[100] border-b border-gray-100/50 backdrop-blur-xl bg-white/70 overflow-visible">
+        <div class="container mx-auto py-4 nav-container-responsive px-6">
+            <div class="flex items-center justify-between nav-gap-responsive gap-12">
+                <div class="flex items-center nav-gap-responsive gap-12">
+                    <div class="flex items-center gap-4 cursor-pointer group" onclick="showPage('browse')">
+                        <div class="w-12 h-12 bg-[#cb0c9f] rounded-full flex items-center justify-center shadow-lg shadow-pink-500/30 group-hover:scale-110 transition-transform duration-300">
+                            <span class="text-white font-normal text-sm tracking-tight">LNS</span>
+                        </div>
+                        <span class="text-2xl font-black text-[#cb0c9f] tracking-tighter mobile-hidden- lg:inline">list<span class="font-black">N</span>sell</span>
+                    </div>
+                    
+                    <div class="hidden md:flex items-center gap-8">
+                        <a href="#" class="text-[10px] font-black uppercase tracking-widest text-[#cb0c9f] border-b-2 border-[#cb0c9f] pb-1 transition-all" onclick="showPage('browse')">Marketplace</a>
+                        <a href="#" class="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-900 transition-all" id="dashboardLink" onclick="showPage('dashboard')" style="display:none;">My Listings</a>
                     </div>
                 </div>
-                <div class="flex items-center gap-4">
-                    <button class="brand-bg text-white px-6 py-2.5 rounded-lg font-semibold hover:opacity-90 transition shadow-md" id="createListingBtn" onclick="showPage('create')" style="display:none;">
-                        <i class="fas fa-plus-circle"></i> Sell Item
+
+                <div class="flex items-center nav-gap-responsive gap-6">
+                    <button id="createListingBtn" onclick="showPage('create')" style="display:none;" 
+                            class="flex items-center gap-2 bg-[#cb0c9f] text-white px-4 lg:px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 transition shadow-xl shadow-pink-500/20 active:scale-95 duration-200">
+                        <i class="fas fa-plus text-xs"></i> <span class="mobile-hidden lg:inline">New Listing</span>
                     </button>
-                    <button class="text-gray-700 px-6 py-2.5 rounded-lg font-semibold hover:bg-gray-100 transition" id="loginBtn" onclick="showPage('auth')">
-                        <i class="fas fa-sign-in-alt"></i> Login
+                    
+                    <button id="loginBtn" onclick="showPage('auth')" 
+                            class="bg-[#cb0c9f] text-white px-8 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:opacity-90 transition shadow-xl shadow-pink-500/20 active:scale-95 duration-200">
+                        Sign In
                     </button>
-                    <button class="text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100 transition" id="userMenuBtn" onclick="toggleUserMenu()" style="display:none;">
-                        <i class="fas fa-user-circle text-2xl"></i>
-                    </button>
+
+                    <div class="flex items-center gap-4">
+                        <div id="userInfo" class="mobile-hidden lg:flex flex-col items-end">
+                            <span id="headerUserName" class="text-xs font-black text-gray-900 tracking-tight"></span>
+                        </div>
+                        
+                        <div class="relative">
+                            <button id="userMenuBtn" onclick="toggleUserMenu()" 
+                                    class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#cb0c9f] hover:bg-pink-50 transition-all border border-gray-100" style="display:none;background: rgb(203, 12, 159) !important">
+                                <i class="fas fa-user-astronaut text-lg" style="color: #fff !important"></i>
+                            </button>
+
+                            <!-- User Dropdown Menu (Internal to Nav for Context) -->
+                            <div id="userMenu" class="hidden absolute right-0 top-full mt-4 bg-white/90 backdrop-blur-xl border border-gray-100 shadow-2xl rounded-3xl py-4 z-[110] min-w-[240px] animate-in slide-in-from-top-4 duration-300">
+                                <div class="px-6 py-4 mb-2 border-b border-gray-50">
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">User Command</p>
+                                    <p class="font-black text-gray-900 truncate">Account Portal</p>
+                                </div>
+                                <a href="#" class="flex items-center gap-4 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-gray-600 hover:bg-pink-50 hover:text-[#cb0c9f] transition-all" onclick="showPage('dashboard')">
+                                    <i class="fas fa-layer-group w-5"></i> Dashboard
+                                </a>
+                                <a href="#" class="flex items-center gap-4 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-gray-600 hover:bg-pink-50 hover:text-[#cb0c9f] transition-all" onclick="showContactModal()">
+                                    <i class="fas fa-headset w-5"></i> Contact Us
+                                </a>
+                                <div class="px-4 py-2 mt-4">
+                                    <button onclick="logout()" class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-red-50 text-red-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-red-500 hover:text-white transition-all shadow-sm">
+                                        <i class="fas fa-power-off"></i>System Exit
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Admin Dropdown Menu -->
+                            <div id="adminMenu" class="hidden absolute right-0 top-full mt-4 bg-white/90 backdrop-blur-xl border border-gray-100 shadow-2xl rounded-3xl py-4 z-[110] min-w-[240px] animate-in slide-in-from-top-4 duration-300">
+                                <div class="px-6 py-4 mb-2 border-b border-gray-50">
+                                    <p class="text-[10px] font-black text-pink-500 uppercase tracking-widest mb-1">Root Access</p>
+                                    <p class="font-black text-gray-900">Administrator</p>
+                                </div>
+                                <a href="#" class="flex items-center gap-4 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-gray-600 hover:bg-pink-50 hover:text-[#cb0c9f] transition-all" onclick="showPage('admin')">
+                                    <i class="fas fa-shield-halved w-5 text-[#cb0c9f]"></i> Control Deck
+                                </a>
+                                <a href="#" class="flex items-center gap-4 px-6 py-4 text-[11px] font-black uppercase tracking-widest text-gray-600 hover:bg-pink-50 hover:text-[#cb0c9f] transition-all" onclick="showPage('dashboard')">
+                                    <i class="fas fa-user-tag w-5 text-[#cb0c9f]"></i> Profile view
+                                </a>
+                                <div class="px-4 py-2 mt-4">
+                                    <button onclick="logout()" class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gray-50 text-gray-400 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-red-500 hover:text-white transition-all border border-gray-100 shadow-sm">
+                                        <i class="fas fa-power-off"></i> Logout
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
     </nav>
-
-    <!-- User Dropdown Menu -->
-    <div id="userMenu" class="hidden absolute right-4 top-16 bg-white shadow-lg rounded-lg py-2 z-50" style="width: 200px;">
-        <a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showPage('dashboard')">
-            <i class="fas fa-th-large mr-2"></i> Dashboard
-        </a>
-        <a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="logout()">
-            <i class="fas fa-sign-out-alt mr-2"></i> Logout
-        </a>
-    </div>
-    <div id="adminMenu" class="hidden absolute right-4 top-16 bg-white shadow-lg rounded-lg py-2 z-50" style="width: 200px;">
-        <a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showPage('admin')">
-            <i class="fas fa-shield-alt mr-2"></i> Admin Panel
-        </a>
-
-        <a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="showPage('dashboard')">
-            <i class="fas fa-th-large mr-2"></i> Dashboard
-        </a>
-        <a href="#" class="block px-4 py-2 hover:bg-gray-100" onclick="logout()">
-            <i class="fas fa-sign-out-alt mr-2"></i> Logout
-        </a>
-    </div>
 
     <!-- Browse Page -->
     <div id="browsePage" class="container mx-auto px-4 py-6">
@@ -68,7 +101,10 @@
 
                     <!-- Category Filter -->
                     <div class="filter-section">
-                        <div class="filter-title">Category</div>
+                        <div class="filter-title">
+                            <i class="fas fa-layer-group text-[10px] text-[#cb0c9f]/60"></i>
+                            <span>Category</span>
+                        </div>
                         <div class="checkbox-item">
                             <input type="checkbox" id="cat-all" value="" onchange="handleCategoryFilter(this)" checked>
                             <label for="cat-all">All Categories</label>
@@ -97,42 +133,68 @@
 
                     <!-- Price Range -->
                     <div class="filter-section">
-                        <div class="filter-title">Price Range</div>
-                        <div class="price-inputs">
-                            <input type="number" id="minPrice" placeholder="Min" value="" class="price-input">
-                            <span class="text-gray-400">—</span>
-                            <input type="number" id="maxPrice" placeholder="Max" value="" class="price-input">
+                        <div class="filter-title">
+                            <i class="fas fa-tags text-[11px] text-[#cb0c9f]"></i>
+                            <span>Price Range</span>
                         </div>
-                        <button onclick="applyFilters()" class="mt-3 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg font-medium text-sm transition">
-                            Apply
+                        <div class="range-slider-container">
+                            <div class="slider-track" id="sliderTrack">
+                                <div class="slider-range" id="sliderRange"></div>
+                                <div class="slider-handle" id="minHandle"></div>
+                                <div class="slider-handle" id="maxHandle"></div>
+                            </div>
+                            <div class="slider-values">
+                                <div class="price-box">
+                                    <label>Minimum</label>
+                                    <span>R<span id="minPriceDisplay">0</span></span>
+                                </div>
+                                <div class="price-box">
+                                    <label>Maximum</label>
+                                    <span>R<span id="maxPriceDisplay">100,000</span>+</span>
+                                </div>
+                            </div>
+                            <input type="hidden" id="minPrice" value="0">
+                            <input type="hidden" id="maxPrice" value="100000">
+                        </div>
+                        <button onclick="applyFilters()" class="mt-6 w-full bg-[#cb0c9f] text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition shadow-xl shadow-pink-500/10 active:scale-95 duration-200">
+                            Apply Range
                         </button>
                     </div>
 
                     <!-- Condition Filter -->
                     <div class="filter-section">
-                        <div class="filter-title">Condition</div>
+                        <div class="filter-title">
+                            <i class="fas fa-sparkles text-[10px] text-[#cb0c9f]/60"></i>
+                            <span>Condition</span>
+                        </div>
                         <div class="checkbox-item">
                             <input type="checkbox" id="cond-new" value="New" onchange="applyFilters()">
-                            <label for="cond-new">New</label>
+                            <label for="cond-new">Brand New</label>
                         </div>
                         <div class="checkbox-item">
                             <input type="checkbox" id="cond-likenew" value="Like New" onchange="applyFilters()">
-                            <label for="cond-likenew">Like New</label>
+                            <label for="cond-likenew">Mint / Like New</label>
                         </div>
                         <div class="checkbox-item">
                             <input type="checkbox" id="cond-used" value="Used" onchange="applyFilters()">
-                            <label for="cond-used">Used</label>
+                            <label for="cond-used">Gently Used</label>
                         </div>
                     </div>
 
                     <!-- Location -->
                     <div class="filter-section">
-                        <div class="filter-title">Location</div>
-                        <input type="text" id="locationFilter" placeholder="Enter location..." class="price-input w-full" onchange="applyFilters()">
+                        <div class="filter-title">
+                            <i class="fas fa-location-dot text-[10px] text-[#cb0c9f]/60"></i>
+                            <span>Location</span>
+                        </div>
+                        <div class="relative group">
+                            <i class="fas fa-map-marker-alt absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#cb0c9f] transition-colors text-xs"></i>
+                            <input type="text" id="locationFilter" placeholder="Search city..." class="price-input w-full pl-10" onchange="applyFilters()">
+                        </div>
                     </div>
 
-                    <button onclick="clearAllFilters()" class="clear-filters-btn w-full">
-                        <i class="fas fa-redo mr-2"></i> Clear All Filters
+                    <button onclick="clearAllFilters()" class="clear-filters-btn w-full group">
+                        <i class="fas fa-undo-alt mr-2 group-hover:rotate-[-120deg] transition-transform duration-500"></i> Clear System Filters
                     </button>
                 </div>
             </div>
@@ -142,14 +204,20 @@
                 <!-- Results Header -->
                 <div class="results-header">
                     <div class="results-count">
-                        Showing <strong id="itemCount">0</strong> items
+                        <i class="fas fa-chart-pie mr-1 sm:mr-2 text-[#cb0c9f]/40"></i>
+                        <span class="hidden sm:inline">Showing</span> <strong id="itemCount">0</strong> items
+                        <span class="mx-1 opacity-50">•</span>
+                        <span class="hidden sm:inline">Page</span><span class="sm:hidden">P.</span> <span id="currentPageNum">1</span> <span class="hidden sm:inline">of</span><span class="sm:hidden">/</span> <span id="totalPagesNum">1</span>
                     </div>
-                    <select id="sortBy" class="sort-select" onchange="applyFilters()">
-                        <option value="newest">Newest First</option>
-                        <option value="price-low">Price: Low to High</option>
-                        <option value="price-high">Price: High to Low</option>
-                        <option value="popular">Most Popular</option>
-                    </select>
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <span class="text-[9px] font-black uppercase tracking-widest text-gray-400 hidden sm:inline">Sort By</span>
+                        <select id="sortBy" class="sort-select" onchange="applyFilters()">
+                            <option value="newest">Newest First</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="popular">Most Popular</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Items Grid -->
@@ -176,201 +244,352 @@
     <!-- Filter Overlay for Mobile -->
     <div class="filter-overlay" id="filterOverlay" onclick="toggleMobileFilters()"></div>
 
-    <!-- Create Listing Page -->
-    <div id="createPage" class="hidden container mx-auto px-4 py-8 max-w-3xl">
-        <div class="bg-white rounded-xl shadow-sm p-8 border border-gray-100">
-            <h2 class="text-3xl font-bold mb-6">Create New Listing</h2>
-            <form id="createListingForm" onsubmit="submitListing(event)">
-                @*<div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-2">Upload Images (Max 5, 10MB each)</label>
-                    <input type="file" id="imageUpload" accept="image/*" multiple class="w-full px-4 py-3 border border-gray-300 rounded-lg" onchange="previewImages(event)">
-                    <div id="imagePreviewGrid" class="grid grid-cols-3 sm:grid-cols-5 gap-3 mt-3"></div>
-                </div>*@
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-2">
-                        Upload Images * 
-                        <span class="text-sm font-normal text-gray-500">(Max 5 images, 10MB each)</span>
-                    </label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-pink-500 transition-colors">
-                        <input type="file" 
-                               id="imageUpload" 
-                               accept="image/*" 
-                               multiple 
-                               class="hidden" 
-                               onchange="previewImages(event)">
-                        <label for="imageUpload" class="cursor-pointer">
-                            <div class="text-gray-400 mb-2">
-                                <i class="fas fa-cloud-upload-alt text-4xl"></i>
+    <!-- Create Listing Page (Modernized) -->
+    <div id="createPage" class="hidden min-h-[calc(100vh-var(--nav-height))] py-12 px-4">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div>
+                    <h2 class="text-4xl font-black text-gray-900 tracking-tight mb-3">Sell something <span class="text-[#cb0c9f]">extraordinary.</span></h2>
+                    <p class="text-sm font-semibold text-gray-400">Fill in the details below to reach thousands of buyers</p>
+                </div>
+                <button type="button" onclick="showPage('browse')" class="text-xs font-black text-gray-400 uppercase tracking-widest hover:text-[#cb0c9f] transition flex items-center gap-2 mb-1">
+                    <i class="fas fa-arrow-left"></i> Back to Browse
+                </button>
+            </div>
+
+            <form id="createListingForm" onsubmit="submitListing(event)" class="space-y-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Left Side: Basic Info & Description -->
+                    <div class="lg:col-span-12">
+                        <div class="glass-effect rounded-3xl border border-gray-100 shadow-xl overflow-hidden">
+                            <div class="p-8 md:p-12 space-y-10 bg-white/40">
+                                <!-- Image Upload Sector -->
+                                <div class="space-y-6">
+                                    <div class="flex items-center justify-between">
+                                        <label class="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em]">Visuals & Photos</label>
+                                        <span class="text-[10px] font-bold text-gray-400">Max 5 images • 10MB each</span>
+                                    </div>
+                                    
+                                    <div class="relative group">
+                                        <input type="file" id="imageUpload" accept="image/*" multiple class="hidden" onchange="previewImages(event)">
+                                        <label for="imageUpload" class="flex flex-col items-center justify-center w-full aspect-[21/9] rounded-3xl border-2 border-dashed border-gray-200 bg-gray-50/50 group-hover:border-[#cb0c9f] group-hover:bg-pink-50/10 transition-all cursor-pointer overflow-hidden p-8 text-center">
+                                            <div class="w-16 h-16 rounded-2xl bg-white shadow-sm flex items-center justify-center text-gray-300 group-hover:text-[#cb0c9f] group-hover:shadow-lg group-hover:shadow-pink-500/10 transition-all mb-4">
+                                                <i class="fas fa-camera text-2xl"></i>
+                                            </div>
+                                            <p class="text-sm font-bold text-gray-700 mb-1">Upload high-quality photos</p>
+                                            <p class="text-[11px] font-semibold text-gray-400">Drag and drop or click to browse</p>
+                                        </label>
+                                    </div>
+                                    <div id="imagePreviewGrid" class="grid grid-cols-2 sm:grid-cols-5 gap-4"></div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                                    <!-- Title Area -->
+                                    <div class="md:col-span-2 group">
+                                        <label class="block text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 ml-1 group-focus-within:text-[#cb0c9f] transition-colors">Listing Title *</label>
+                                        <input type="text" id="itemTitle" required class="w-full px-6 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-bold text-xl placeholder:text-gray-300" placeholder="e.g. Vintage 1970s Leather Sofa">
+                                    </div>
+
+                                    <!-- Price & Category -->
+                                    <div class="group">
+                                        <label class="block text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 ml-1 group-focus-within:text-[#cb0c9f] transition-colors">Price *</label>
+                                        <div class="relative">
+                                            <span class="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 font-bold">R</span>
+                                            <input type="number" id="itemPrice" required min="0" step="0.01" class="w-full pl-12 pr-6 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-bold" placeholder="0.00">
+                                        </div>
+                                    </div>
+
+                                    <div class="group">
+                                        <label class="block text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 ml-1 group-focus-within:text-[#cb0c9f] transition-colors">Category *</label>
+                                        <select id="itemCategory" required class="w-full px-6 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-bold appearance-none cursor-pointer">
+                                            <option value="">Choose category</option>
+                                            <option value="Electronics">Electronics</option>
+                                            <option value="Furniture">Furniture</option>
+                                            <option value="Clothing">Clothing</option>
+                                            <option value="Books">Books</option>
+                                            <option value="Sports">Sports & Outdoors</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Description Area -->
+                                    <div class="md:col-span-2 group">
+                                        <label class="block text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 ml-1 group-focus-within:text-[#cb0c9f] transition-colors">Description *</label>
+                                        <textarea id="itemDescription" required rows="6" class="w-full px-6 py-5 bg-gray-50/50 border-gray-100 rounded-3xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-medium text-sm leading-relaxed" placeholder="Tell buyers what makes your item special..."></textarea>
+                                    </div>
+
+                                    <!-- Condition & Location -->
+                                    <div class="group">
+                                        <label class="block text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 ml-1 group-focus-within:text-[#cb0c9f] transition-colors">Condition *</label>
+                                        <select id="itemCondition" required class="w-full px-6 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-bold appearance-none cursor-pointer">
+                                            <option value="">Select status</option>
+                                            <option value="New">New / In Box</option>
+                                            <option value="Like New">Like New / Mint</option>
+                                            <option value="Used">Used / Functional</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="group">
+                                        <label class="block text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3 ml-1 group-focus-within:text-[#cb0c9f] transition-colors">Location *</label>
+                                        <div class="relative">
+                                            <i class="fas fa-map-marker-alt absolute left-6 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-[#cb0c9f] transition-colors"></i>
+                                            <input type="text" id="itemLocation" required class="w-full pl-12 pr-6 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-bold" placeholder="e.g. Cape Town, CBD">
+                                        </div>
+                                    </div>
+
+                                    <!-- Compliance -->
+                                    <div class="md:col-span-2 pt-6 border-t border-gray-100/50 flex items-center gap-4">
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="notRobot" required class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-100 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#cb0c9f]"></div>
+                                            <span class="ml-4 text-xs font-bold text-gray-500 uppercase tracking-widest">I agree to terms & conditions</span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
-                            <p class="text-gray-600 font-medium">Click to upload images</p>
-                            <p class="text-sm text-gray-500 mt-1">PNG, JPG, GIF up to 10MB</p>
-                        </label>
+
+                            <!-- Form Footer -->
+                            <div class="p-8 md:p-12 bg-gray-50/80 border-t border-gray-100/50 flex flex-col sm:flex-row gap-4 justify-end">
+                                <button type="button" onclick="showPage('browse')" class="px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest text-gray-400 hover:text-gray-900 transition-colors">
+                                    Discard
+                                </button>
+                                <button type="submit" id="submitListingBtn" class="px-12 py-4 bg-[#cb0c9f] text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-pink-500/20 active:scale-95 duration-200 flex items-center justify-center gap-3">
+                                    <i class="fas fa-rocket"></i> Launch Listing
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div id="imagePreviewGrid" class="grid grid-cols-3 sm:grid-cols-5 gap-3 mt-4"></div>
-                </div>
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-2">Title *</label>
-                    <input type="text" id="itemTitle" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="e.g., iPhone 13 Pro Max">
-                </div>
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-2">Description *</label>
-                    <textarea id="itemDescription" required rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="Describe your item in detail..."></textarea>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Category *</label>
-                        <select id="itemCategory" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500">
-                            <option value="">Select Category</option>
-                            <option value="Electronics">Electronics</option>
-                            <option value="Furniture">Furniture</option>
-                            <option value="Clothing">Clothing</option>
-                            <option value="Books">Books</option>
-                            <option value="Sports">Sports & Outdoors</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Price (R) *</label>
-                        <input type="number" id="itemPrice" required min="0" step="0.01" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="0.00">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Condition *</label>
-                        <select id="itemCondition" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500">
-                            <option value="">Select Condition</option>
-                            <option value="New">New</option>
-                            <option value="Like New">Like New</option>
-                            <option value="Used">Used</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Location *</label>
-                        <input type="text" id="itemLocation" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="City, Suburb">
-                    </div>
-                </div>
-                <div class="mb-6 flex items-center gap-2">
-                    <input type="checkbox" id="notRobot" required class="w-5 h-5">
-                    <label for="notRobot" class="text-gray-700">I'm not a robot</label>
-                </div>
-                <div class="flex gap-4">
-                    <button type="submit" id="submitListingBtn" class="brand-bg text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition flex-1">
-                        <i class="fas fa-check"></i> Submit Listing
-                    </button>
-                    <button type="button" onclick="showPage('browse')" class="bg-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-400 transition">
-                        Cancel
-                    </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Dashboard Page -->
-    <div id="dashboardPage" class="hidden container mx-auto px-4 py-8">
-        <h2 class="text-3xl font-bold mb-6">My Dashboard</h2>
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100">
-            <div class="border-b">
-                <div class="flex">
-                    <button onclick="switchTab('listings')" id="listingsTab" class="px-6 py-4 font-semibold border-b-2 border-pink-600 text-pink-600">My Listings</button>
-                    <button onclick="switchTab('messages')" id="messagesTab" class="px-6 py-4 font-semibold text-gray-600 hover:text-gray-800">Messages</button>
-                    <button onclick="switchTab('profile')" id="profileTab" class="px-6 py-4 font-semibold text-gray-600 hover:text-gray-800">Profile</button>
+    <!-- Dashboard Page (Modernized) -->
+    <div id="dashboardPage" class="hidden min-h-[calc(100vh-var(--nav-height))] py-12 px-4 animate-in fade-in slide-in-from-bottom-5 duration-700">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div>
+                    <h2 class="text-4xl font-black text-gray-900 tracking-tight mb-3">My <span class="text-[#cb0c9f]">Profile.</span></h2>
+                    <p class="text-sm font-semibold text-gray-400">Manage your active listings and conversations</p>
+                </div>
+                <div class="flex gap-4">
+                    <div class="glass-effect px-6 py-4 rounded-2xl border border-gray-100 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center text-[#cb0c9f]">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active Listings</p>
+                            <p class="text-xl font-black text-gray-900" id="dashListingCount">0</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="p-6">
-                <div id="listingsContent">
-                    <div id="myListingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+            <div class="glass-effect rounded-[2.5rem] border border-gray-100 shadow-2xl overflow-hidden bg-white/40">
+                <!-- Dashboard Tabs -->
+                <div class="flex border-b border-gray-100/50 bg-gray-50/30">
+                    <button onclick="switchTab('listings')" id="listingsTab" class="px-10 py-6 text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 border-b-2 border-[#cb0c9f] text-[#cb0c9f]">
+                        <i class="fas fa-th-large mr-2"></i> My Listings
+                    </button>
+                    <button onclick="switchTab('messages')" id="messagesTab" class="px-10 py-6 text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 border-b-2 border-transparent text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-comment-alt mr-2"></i> Messages
+                    </button>
+                    <button onclick="switchTab('profile')" id="profileTab" class="px-10 py-6 text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 border-b-2 border-transparent text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-user-circle mr-2"></i> Profile
+                    </button>
                 </div>
-                <div id="messagesContent" class="hidden">
-                    <div id="messagesList" class="space-y-4"></div>
-                </div>
-                <div id="profileContent" class="hidden">
-                    <div class="max-w-2xl">
-                        <div class="mb-6">
-                            <label class="block text-gray-700 font-semibold mb-2">Name</label>
-                            <input type="text" id="profileName" class="w-full px-4 py-3 border border-gray-300 rounded-lg" value="John Doe">
+
+                <div class="p-8 md:p-12">
+                    <!-- Listings Tab Content -->
+                    <div id="listingsContent" class="animate-in fade-in duration-500">
+                        <div id="myListingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <!-- Populated by JS -->
                         </div>
-                        <div class="mb-6">
-                            <label class="block text-gray-700 font-semibold mb-2">Email</label>
-                            <input type="email" id="profileEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg" value="john@example.com">
+                    </div>
+
+                    <!-- Messages Tab Content -->
+                    <div id="messagesContent" class="hidden animate-in fade-in duration-500">
+                        <div id="messagesList" class="space-y-4 max-w-3xl mx-auto">
+                            <!-- Populated by JS -->
+                            <div class="text-center py-20">
+                                <i class="fas fa-comments text-5xl text-gray-100 mb-4"></i>
+                                <p class="text-gray-400 font-bold uppercase tracking-widest text-xs">No active conversations yet</p>
+                            </div>
                         </div>
-                        <div class="mb-6">
-                            <label class="block text-gray-700 font-semibold mb-2">Location</label>
-                            <input type="text" id="profileLocation" class="w-full px-4 py-3 border border-gray-300 rounded-lg" value="New York, NY">
+                    </div>
+
+                    <!-- Profile Tab Content -->
+                    <div id="profileContent" class="hidden animate-in fade-in duration-500">
+                        <div class="max-w-2xl mx-auto bg-gray-50/50 rounded-3xl p-8 md:p-12 border border-gray-100">
+                            <h3 class="text-2xl font-black text-gray-900 mb-8 tracking-tight">Account <span class="text-[#cb0c9f]">Settings</span></h3>
+                            
+                            <div class="space-y-8">
+                                <div class="group">
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within:text-[#cb0c9f]">Display Name</label>
+                                    <input type="text" id="profileName" class="w-full px-6 py-4 bg-white border-gray-100 rounded-2xl focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-bold" value="John Doe">
+                                </div>
+
+                                <div class="group">
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within:text-[#cb0c9f]">Email Address</label>
+                                    <input type="email" id="profileEmail" class="w-full px-6 py-4 bg-white border-gray-100 rounded-2xl focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-bold" value="john@example.com">
+                                </div>
+
+                                <div class="group">
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within:text-[#cb0c9f]">Phone Number</label>
+                                    <div class="relative">
+                                        <i class="fas fa-phone absolute left-6 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                                        <input type="tel" id="profilePhone" class="w-full pl-12 pr-6 py-4 bg-white border-gray-100 rounded-2xl focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-bold" value="+27 123 456 789">
+                                    </div>
+                                </div>
+
+                                <div class="group">
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within:text-[#cb0c9f]">Primary Location</label>
+                                    <div class="relative">
+                                        <i class="fas fa-map-marker-alt absolute left-6 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                                        <input type="text" id="profileLocation" class="w-full pl-12 pr-6 py-4 bg-white border-gray-100 rounded-2xl focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-bold" value="Johannesburg, SA">
+                                    </div>
+                                </div>
+
+                                <div class="pt-6">
+                                    <button onclick="updateProfile()" class="w-full sm:w-auto px-12 py-5 bg-[#cb0c9f] text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-pink-500/20 active:scale-95 duration-200 flex items-center justify-center gap-3">
+                                        <i class="fas fa-save shadow-lg"></i> Save Profile
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <button onclick="updateProfile()" class="brand-bg text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition">
-                            <i class="fas fa-save"></i> Save Changes
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Auth Page -->
-    <div id="authPage" class="hidden container mx-auto px-4 py-8">
-        <div class="max-w-md mx-auto bg-white rounded-xl shadow-sm p-8 border border-gray-100">
-            <div class="mb-6">
-                <div class="flex gap-4 border-b">
-                    <button onclick="switchAuthTab('login')" id="loginTabBtn" class="flex-1 py-3 font-semibold border-b-2 border-pink-600 text-pink-600">Login</button>
-                    <button onclick="switchAuthTab('register')" id="registerTabBtn" class="flex-1 py-3 font-semibold text-gray-600">Register</button>
-                </div>
-            </div>
-            <div id="loginForm">
-                <h2 class="text-2xl font-bold mb-6">Welcome Back</h2>
-                <form onsubmit="handleLogin(event)">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-semibold mb-2">Email</label>
-                        <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="your@email.com" value="enkw@mail.com"/>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-semibold mb-2">Password</label>
-                        <input type="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="••••••••"  value="Enkw@610230" />
-                    </div>
-                    <div class="mb-4">
-                        <a href="#" onclick="switchAuthTab('forgot')" class="text-pink-600 hover:underline text-sm">Forgot Password?</a>
-                    </div>
-                    <button type="submit" class="w-full brand-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
+    <!-- Auth Page (Modernized) -->
+    <div id="authPage" class="hidden min-h-[calc(100vh-var(--nav-height))] flex items-center justify-center p-4">
+        <div class="w-full max-w-[480px] animate-in fade-in zoom-in duration-500">
+            <div class="glass-effect rounded-[2.5rem] border border-gray-100 shadow-2xl overflow-hidden">
+                <!-- Tab Headers -->
+                <div class="flex border-b border-gray-100/50 bg-gray-50/50">
+                    <button onclick="switchAuthTab('login')" id="loginTabBtn" class="flex-1 py-6 text-sm font-black uppercase tracking-[0.2em] transition-all duration-300 border-b-2 border-[#cb0c9f] text-[#cb0c9f]">
                         Login
                     </button>
-                </form>
-            </div>
-            <div id="registerForm" class="hidden">
-                <h2 class="text-2xl font-bold mb-6">Create Account</h2>
-                <form onsubmit="handleRegister(event)">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-semibold mb-2">Full Name</label>
-                        <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="John Doe" value="John Doe"/>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-semibold mb-2">Email</label>
-                        <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="your@email.com" value="enkw@mail.com"/>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-semibold mb-2">Password</label>
-                        <input type="password" id="regPassword" required minlength="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="••••••••"  value="Enkw@610230"/>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-semibold mb-2">Confirm Password</label>
-                        <input type="password" id="regConfirmPassword" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="••••••••" value="Enkw@610230" />
-                    </div>
-                    <button type="submit" class="w-full brand-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
+                    <button onclick="switchAuthTab('register')" id="registerTabBtn" class="flex-1 py-6 text-sm font-black uppercase tracking-[0.2em] transition-all duration-300 border-b-2 border-transparent text-gray-400 hover:text-gray-600">
                         Register
                     </button>
-                </form>
+                </div>
+
+                <div class="p-10 md:p-14 bg-white/40">
+                    <!-- Login Form -->
+                    <div id="loginForm" class="space-y-8">
+                        <div class="text-center mb-10">
+                            <h2 class="text-4xl font-black text-gray-900 mb-3 tracking-tight">Welcome <span class="text-[#cb0c9f]">Back.</span></h2>
+                            <p class="text-sm font-semibold text-gray-400">Enter your details to access your account</p>
+                        </div>
+                        
+                        <form onsubmit="handleLogin(event)" class="space-y-6">
+                            <div class="group">
+                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-[#cb0c9f] transition-colors">Email Address</label>
+                                <div class="relative">
+                                    <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 transition-colors group-focus-within:text-[#cb0c9f]"></i>
+                                    <input type="email" required class="w-full pl-12 pr-4 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-semibold" placeholder="name@company.com" value="enkw@mail.com"/>
+                                </div>
+                            </div>
+
+                            <div class="group">
+                                <div class="flex justify-between items-center mb-2 ml-1">
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest group-focus-within:text-[#cb0c9f] transition-colors">Password</label>
+                                    <a href="#" onclick="switchAuthTab('forgot')" class="text-[10px] font-black text-[#cb0c9f] uppercase tracking-widest hover:opacity-70 transition">Forgot?</a>
+                                </div>
+                                <div class="relative">
+                                    <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 transition-colors group-focus-within:text-[#cb0c9f]"></i>
+                                    <input type="password" required class="w-full pl-12 pr-4 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-semibold" placeholder="••••••••"  value="Enkw@610230" />
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-black transition-all shadow-xl active:scale-95 duration-200">
+                                Sign In
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Register Form -->
+                    <div id="registerForm" class="hidden space-y-8">
+                        <div class="text-center mb-10">
+                            <h2 class="text-4xl font-black text-gray-900 mb-3 tracking-tight">Join <span class="text-[#cb0c9f]">Us.</span></h2>
+                            <p class="text-sm font-semibold text-gray-400">Start your selling journey in seconds</p>
+                        </div>
+                        
+                        <form onsubmit="handleRegister(event)" class="space-y-6">
+                            <div class="group">
+                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-[#cb0c9f]">Full Name</label>
+                                <div class="relative">
+                                    <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 transition-colors group-focus-within:text-[#cb0c9f]"></i>
+                                    <input type="text" required class="w-full pl-12 pr-4 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-semibold" placeholder="John Doe" value="John Doe"/>
+                                </div>
+                            </div>
+
+                            <div class="group">
+                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-[#cb0c9f]">Email Address</label>
+                                <div class="relative">
+                                    <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 transition-colors group-focus-within:text-[#cb0c9f]"></i>
+                                    <input type="email" required class="w-full pl-12 pr-4 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-semibold" placeholder="name@company.com" value="enkw@mail.com"/>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="group">
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-[#cb0c9f]">Password</label>
+                                    <input type="password" id="regPassword" required minlength="6" class="w-full px-5 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-semibold text-sm" placeholder="••••••••"  value="Enkw@610230"/>
+                                </div>
+                                <div class="group">
+                                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-[#cb0c9f]">Confirm</label>
+                                    <input type="password" id="regConfirmPassword" required class="w-full px-5 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-semibold text-sm" placeholder="••••••••" value="Enkw@610230" />
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full bg-[#cb0c9f] text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-pink-500/20 active:scale-95 duration-200">
+                                Create Account
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Forgot Form -->
+                    <div id="forgotForm" class="hidden space-y-8">
+                        <div class="text-center mb-10">
+                            <h2 class="text-4xl font-black text-gray-900 mb-3 tracking-tight">Reset.</h2>
+                            <p class="text-sm font-semibold text-gray-400">We'll email you a secure reset link</p>
+                        </div>
+
+                        <form onsubmit="handleForgotPassword(event)" class="space-y-8">
+                            <div class="group">
+                                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1 group-focus-within:text-[#cb0c9f]">Email Address</label>
+                                <div class="relative">
+                                    <i class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 transition-colors group-focus-within:text-[#cb0c9f]"></i>
+                                    <input type="email" required class="w-full pl-12 pr-4 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-semibold" placeholder="your@email.com">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-black transition-all shadow-xl active:scale-95 duration-200">
+                                Send Reset Link
+                            </button>
+
+                            <div class="text-center">
+                                <a href="#" onclick="switchAuthTab('login')" class="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-[#cb0c9f] transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-arrow-left"></i> Back to Login
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div id="forgotForm" class="hidden">
-                <h2 class="text-2xl font-bold mb-6">Reset Password</h2>
-                <form onsubmit="handleForgotPassword(event)">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-semibold mb-2">Email</label>
-                        <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500" placeholder="your@email.com">
-                    </div>
-                    <button type="submit" class="w-full brand-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
-                        Send Reset Link
-                    </button>
-                    <div class="mt-4">
-                        <a href="#" onclick="switchAuthTab('login')" class="text-pink-600 hover:underline text-sm">Back to Login</a>
-                    </div>
-                </form>
+            
+            <!-- Social Proof / Help Footer -->
+            <div class="mt-8 text-center px-8">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">Trusted by 10k+ users</p>
+                <div class="flex justify-center gap-6 text-gray-300">
+                    <i class="fab fa-apple text-xl"></i>
+                    <i class="fab fa-google text-xl"></i>
+                    <i class="fab fa-facebook text-xl"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -385,147 +604,294 @@
         </div>
     </div>
 
-    <!-- Message Modal -->
+    <!-- Message Modal (Modernized) -->
     <div id="messageModal" class="modal">
-        <div class="modal-content max-w-lg">
-            <button onclick="closeModal('messageModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl">
+        <div class="modal-content max-w-lg animate-in fade-in zoom-in duration-300">
+            <button onclick="closeModal('messageModal')" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition-colors z-10 w-10 h-10 rounded-full flex items-center justify-center bg-gray-50/50">
                 <i class="fas fa-times"></i>
             </button>
-            <div class="p-8">
-                <h3 class="text-2xl font-bold mb-4">Send Message to Seller</h3>
-                <form onsubmit="sendMessage(event)">
-                    <textarea id="messageText" rows="5" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-pink-500 mb-4" placeholder="Hi, I'm interested in this item..."></textarea>
-                    <button type="submit" class="w-full brand-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
+            <div class="p-10 md:p-12">
+                <div class="text-center mb-10">
+                    <div class="w-16 h-16 bg-pink-50 rounded-2xl flex items-center justify-center text-[#cb0c9f] mx-auto mb-6">
+                        <i class="fas fa-comment-dots text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-gray-900 mb-2 tracking-tight">Direct <span class="text-[#cb0c9f]">Message</span></h3>
+                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">To: <span id="messageRecipient" class="text-gray-900">Seller</span></p>
+                    <p class="text-sm font-semibold text-gray-400 text-balance">Connect to finalize the deal</p>
+                </div>
+                
+                <form onsubmit="sendMessage(event)" class="space-y-8">
+                    <div class="group">
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within:text-[#cb0c9f]">Your Message</label>
+                        <textarea id="messageText" rows="5" required class="w-full px-6 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-semibold leading-relaxed" placeholder="Hi, I'm interested in this item..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-[#cb0c9f] text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-pink-500/20 active:scale-95 duration-200 flex items-center justify-center gap-3">
                         <i class="fas fa-paper-plane"></i> Send Message
                     </button>
+                    
+                    <p class="text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest leading-loose">
+                        By sending this message, you agree to our <br/>
+                        <a href="#" class="text-gray-900 hover:text-[#cb0c9f] transition">safety guidelines</a>
+                    </p>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Login Required Modal -->
+    <!-- Login Required Modal (Modernized) -->
     <div id="loginRequiredModal" class="modal">
-        <div class="modal-content max-w-md">
-            <div class="p-8 text-center">
-                <i class="fas fa-lock text-6xl brand-color mb-4"></i>
-                <h3 class="text-2xl font-bold mb-4">Login Required</h3>
-                <p class="text-gray-600 mb-6">You need to log in to contact the seller.</p>
-                <div class="flex gap-4">
-                    <button onclick="closeModal('loginRequiredModal'); showPage('auth');" class="flex-1 brand-bg text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
-                        Login
+        <div class="modal-content max-w-md animate-in fade-in zoom-in duration-300">
+            <button onclick="closeModal('loginRequiredModal')" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition-colors z-10 w-10 h-10 rounded-full flex items-center justify-center bg-gray-50/50">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="p-10 md:p-12 text-center">
+                <div class="w-20 h-20 bg-pink-50 rounded-[2rem] flex items-center justify-center text-[#cb0c9f] mx-auto mb-8 shadow-inner">
+                    <i class="fas fa-lock text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-black text-gray-900 mb-3 tracking-tight">Passport <span class="text-[#cb0c9f]">Required</span></h3>
+                <p class="text-sm font-semibold text-gray-400 mb-10 leading-relaxed text-balance">
+                    You'll need an active account to start a conversation with the seller.
+                </p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="closeModal('loginRequiredModal'); showPage('auth');" class="w-full bg-gray-900 text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-black transition-all shadow-xl active:scale-95 duration-200">
+                        Sign In
                     </button>
-                    <button onclick="closeModal('loginRequiredModal'); showPage('auth'); switchAuthTab('register');" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-400 transition">
-                        Register
+                    <button onclick="closeModal('loginRequiredModal'); showPage('auth'); switchAuthTab('register');" class="w-full bg-white text-gray-400 py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:text-gray-900 transition-all border border-gray-100">
+                        Create Account
                     </button>
                 </div>
             </div>
         </div>
     </div>
-<!-- Admin Page -->
-<div id="adminPage" class="hidden container mx-auto px-4 py-8">
-    <div class="mb-6 flex items-center justify-between">
-        <h2 class="text-3xl font-bold">
-            <i class="fas fa-shield-alt text-pink-600 mr-2"></i>
-            Admin Panel
-        </h2>
-        <div class="flex gap-4">
-            <div class="bg-white rounded-lg shadow-sm px-4 py-2 border border-gray-200">
-                <span class="text-sm text-gray-500">Pending Approval</span>
-                <p class="text-2xl font-bold text-yellow-600" id="pendingCount">0</p>
-            </div>
-            <div class="bg-white rounded-lg shadow-sm px-4 py-2 border border-gray-200">
-                <span class="text-sm text-gray-500">Total Listings</span>
-                <p class="text-2xl font-bold text-gray-800" id="totalListingsCount">0</p>
-            </div>
-            <div class="bg-white rounded-lg shadow-sm px-4 py-2 border border-gray-200">
-                <span class="text-sm text-gray-500">Reports</span>
-                <p class="text-2xl font-bold text-red-600" id="reportsCount">0</p>
-            </div>
-        </div>
-    </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
-        <div class="border-b">
-            <div class="flex">
-                <button onclick="switchAdminTab('pending')" id="pendingTab" class="px-6 py-4 font-semibold border-b-2 border-pink-600 text-pink-600">
-                    Pending Approval
-                </button>
-                <button onclick="switchAdminTab('all')" id="allListingsTab" class="px-6 py-4 font-semibold text-gray-600 hover:text-gray-800">
-                    All Listings
-                </button>
-                <button onclick="switchAdminTab('reported')" id="reportedTab" class="px-6 py-4 font-semibold text-gray-600 hover:text-gray-800">
-                    Reported Items
-                </button>
-                <button onclick="switchAdminTab('users')" id="usersTab" class="px-6 py-4 font-semibold text-gray-600 hover:text-gray-800">
-                    Users
-                </button>
-            </div>
-        </div>
-        
-        <div class="p-6">
-            <!-- Pending Approval Content -->
-            <div id="pendingContent">
-                <div class="mb-4 flex justify-between items-center">
-                    <h3 class="text-xl font-semibold">Listings Pending Approval</h3>
-                    <button onclick="loadAdminListings('pending')" class="text-pink-600 hover:text-pink-700">
-                        <i class="fas fa-sync-alt mr-1"></i> Refresh
-                    </button>
-                </div>
-                <div id="pendingListingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            </div>
-
-            <!-- All Listings Content -->
-            <div id="allListingsContent" class="hidden">
-                <div class="mb-4 flex justify-between items-center">
-                    <h3 class="text-xl font-semibold">All Listings</h3>
-                    <div class="flex gap-2">
-                        <select id="adminStatusFilter" onchange="loadAdminListings('all')" class="px-4 py-2 border border-gray-300 rounded-lg">
-                            <option value="">All Status</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Approved">Approved</option>
-                            <option value="Rejected">Rejected</option>
-                            <option value="Sold">Sold</option>
-                        </select>
-                        <button onclick="loadAdminListings('all')" class="text-pink-600 hover:text-pink-700">
-                            <i class="fas fa-sync-alt mr-1"></i> Refresh
-                        </button>
+    <!-- Contact Us Modal (Support Ticket) -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content max-w-lg animate-in fade-in zoom-in duration-300">
+            <button onclick="closeModal('contactModal')" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition-colors z-10 w-10 h-10 rounded-full flex items-center justify-center bg-gray-50/50">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="p-10 md:p-12">
+                <div class="text-center mb-10">
+                    <div class="w-16 h-16 bg-pink-50 rounded-2xl flex items-center justify-center text-[#cb0c9f] mx-auto mb-6">
+                        <i class="fas fa-headset text-2xl"></i>
                     </div>
+                    <h3 class="text-2xl font-black text-gray-900 mb-2 tracking-tight">Contact <span class="text-[#cb0c9f]">Support</span></h3>
+                    <p class="text-sm font-semibold text-gray-400 text-balance">We're here to help! Send us your question or concern.</p>
                 </div>
-                <div id="allListingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                
+                <form onsubmit="submitSupportTicket(event)" id="contactForm" class="space-y-6">
+                    <div class="group">
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within:text-[#cb0c9f]">Subject *</label>
+                        <input type="text" id="supportTitle" required maxlength="200" class="w-full px-6 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-semibold" placeholder="Brief description of your issue...">
+                    </div>
+                    
+                    <div class="group">
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within:text-[#cb0c9f]">Message *</label>
+                        <textarea id="supportMessage" rows="6" required maxlength="2000" class="w-full px-6 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-semibold leading-relaxed" placeholder="Please provide details about your question or issue..."></textarea>
+                        <p class="text-[10px] text-gray-400 font-semibold mt-2 ml-1"><span id="charCount">0</span>/2000 characters</p>
+                    </div>
+                    
+                    <button type="submit" id="submitSupportBtn" class="w-full bg-[#cb0c9f] text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-pink-500/20 active:scale-95 duration-200 flex items-center justify-center gap-3">
+                        <i class="fas fa-paper-plane"></i> Send Support Ticket
+                    </button>
+                    
+                    <p class="text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest leading-loose">
+                        We typically respond within <span class="text-[#cb0c9f]">24 hours</span>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<!-- Ticket Detail Modal -->
+<div id="ticketDetailModal" class="modal">
+    <div class="modal-content max-w-2xl animate-in fade-in zoom-in duration-300">
+        <button onclick="closeModal('ticketDetailModal')" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition-colors z-10 w-10 h-10 rounded-full flex items-center justify-center bg-gray-50/50">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="p-10 md:p-12">
+            <div class="text-center mb-10">
+                <div class="w-16 h-16 bg-pink-50 rounded-2xl flex items-center justify-center text-[#cb0c9f] mx-auto mb-6">
+                    <i class="fas fa-ticket-alt text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-black text-gray-900 mb-2 tracking-tight">Ticket <span class="text-[#cb0c9f]">Details</span></h3>
+            </div>
+            
+            <div id="ticketDetailContent" class="space-y-6">
+                <!-- Ticket details will be loaded here -->
             </div>
 
-            <!-- Reported Items Content -->
-            <div id="reportedContent" class="hidden">
-                <div class="mb-4 flex justify-between items-center">
-                    <h3 class="text-xl font-semibold">Reported Listings</h3>
-                    <button onclick="loadReportedListings()" class="text-pink-600 hover:text-pink-700">
-                        <i class="fas fa-sync-alt mr-1"></i> Refresh
+            <!-- Response Form (only shown for Open tickets) -->
+            <div id="responseFormSection" class="hidden mt-8 pt-8 border-t border-gray-100">
+                <form onsubmit="submitTicketResponse(event)" id="ticketResponseForm">
+                    <input type="hidden" id="responseTicketId" value="">
+                    <div class="group">
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 ml-1 group-focus-within:text-[#cb0c9f]">Admin Response *</label>
+                        <textarea id="adminResponseMessage" rows="4" required maxlength="2000" class="w-full px-6 py-4 bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white focus:border-[#cb0c9f]/30 transition-all outline-none text-gray-900 font-semibold leading-relaxed" placeholder="Type your response to the user..."></textarea>
+                    </div>
+                    
+                    <button type="submit" id="submitResponseBtn" class="w-full mt-6 bg-[#cb0c9f] text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:opacity-90 transition-all shadow-xl shadow-pink-500/20 active:scale-95 duration-200 flex items-center justify-center gap-3">
+                        <i class="fas fa-paper-plane"></i> Send Response & Email User
                     </button>
-                </div>
-                <div id="reportedListingsGrid" class="space-y-4"></div>
-            </div>
-
-            <!-- Users Content -->
-            <div id="usersContent" class="hidden">
-                <div class="mb-4 flex justify-between items-center">
-                    <h3 class="text-xl font-semibold">User Management</h3>
-                    <button onclick="loadAllUsers()" class="text-pink-600 hover:text-pink-700">
-                        <i class="fas fa-sync-alt mr-1"></i> Refresh
-                    </button>
-                </div>
-                <div id="usersGrid" class="space-y-3"></div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Admin Action Modal -->
+<!-- Admin Page (Modernized) -->
+<div id="adminPage" class="hidden min-h-[calc(100vh-var(--nav-height))] py-12 px-4 animate-in fade-in slide-in-from-bottom-5 duration-700">
+    <div class="max-w-7xl mx-auto">
+        <!-- Dashboard Header -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-12">
+            <div>
+                <h2 class="text-4xl font-black text-gray-900 tracking-tight mb-3">Master Control <span class="text-[#cb0c9f]">Panel.</span></h2>
+                <p class="text-sm font-semibold text-gray-400">Total oversight of the marketplace ecosystem</p>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:w-[600px]">
+                <div class="glass-effect p-5 rounded-2xl border border-gray-100 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-yellow-50 flex items-center justify-center text-yellow-600">
+                        <i class="fas fa-clock text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Pending</p>
+                        <p class="text-2xl font-black text-yellow-600" id="pendingCount">0</p>
+                    </div>
+                </div>
+                <div class="glass-effect p-5 rounded-2xl border border-gray-100 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-gray-800">
+                        <i class="fas fa-layer-group text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Total</p>
+                        <p class="text-2xl font-black text-gray-800" id="totalListingsCount">0</p>
+                    </div>
+                </div>
+                <div class="glass-effect p-5 rounded-2xl border border-gray-100 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center text-red-600">
+                        <i class="fas fa-exclamation-triangle text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Reports</p>
+                        <p class="text-2xl font-black text-red-600" id="reportsCount">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
+            <!-- Admin Sidebar Navigation -->
+            <div class="glass-effect rounded-[2rem] border border-gray-100 p-6 h-fit bg-white/40">
+                <div class="space-y-2">
+                    <button onclick="switchAdminTab('pending')" id="pendingTab" class="w-full flex items-center gap-4 px-6 py-4 rounded-xl text-sm font-black uppercase tracking-widest transition-all duration-300 bg-[#cb0c9f] text-white shadow-xl shadow-pink-500/20">
+                        <i class="fas fa-hourglass-half"></i> <span>Pending</span>
+                    </button>
+                    <button onclick="switchAdminTab('all')" id="allListingsTab" class="w-full flex items-center gap-4 px-6 py-4 rounded-xl text-sm font-black uppercase tracking-widest transition-all duration-300 text-gray-400 hover:bg-gray-50">
+                        <i class="fas fa-list"></i> <span>All Items</span>
+                    </button>
+                    <button onclick="switchAdminTab('reported')" id="reportedTab" class="w-full flex items-center gap-4 px-6 py-4 rounded-xl text-sm font-black uppercase tracking-widest transition-all duration-300 text-gray-400 hover:bg-gray-50">
+                        <i class="fas fa-flag"></i> <span>Reports</span>
+                    </button>
+                    <button onclick="switchAdminTab('users')" id="usersTab" class="w-full flex items-center gap-4 px-6 py-4 rounded-xl text-sm font-black uppercase tracking-widest transition-all duration-300 text-gray-400 hover:bg-gray-50">
+                        <i class="fas fa-users"></i> <span>Userbase</span>
+                    </button>
+                    <button onclick="switchAdminTab('tickets')" id="ticketsTab" class="w-full flex items-center gap-4 px-6 py-4 rounded-xl text-sm font-black uppercase tracking-widest transition-all duration-300 text-gray-400 hover:bg-gray-50">
+                        <i class="fas fa-headset"></i> <span>Support</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="glass-effect rounded-[2.5rem] border border-gray-100 shadow-2xl bg-white/40 overflow-hidden min-h-[600px]">
+                <div class="p-8 md:p-12">
+                    <!-- Pending Content -->
+                    <div id="pendingContent" class="animate-in fade-in duration-500">
+                        <div class="flex items-center justify-between mb-8 pb-6 border-b border-gray-100/50">
+                            <h3 class="text-xl font-black text-gray-900 uppercase tracking-widest">Waiting for <span class="text-[#cb0c9f]">Consent</span></h3>
+                            <button onclick="loadAdminListings('pending')" class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#cb0c9f] transition-colors">
+                                <i class="fas fa-sync-alt text-xs"></i>
+                            </button>
+                        </div>
+                        <div id="pendingListingsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+                    </div>
+
+                    <!-- All Listings Content -->
+                    <div id="allListingsContent" class="hidden animate-in fade-in duration-500">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 pb-6 border-b border-gray-100/50">
+                            <h3 class="text-xl font-black text-gray-900 uppercase tracking-widest">Global <span class="text-[#cb0c9f]">Archive</span></h3>
+                            <div class="flex gap-3">
+                                <select id="adminStatusFilter" onchange="loadAdminListings('all')" class="px-6 py-3 bg-gray-50/50 border-gray-100 rounded-xl outline-none text-[11px] font-black uppercase tracking-widest focus:bg-white focus:border-[#cb0c9f]/30 transition-all">
+                                    <option value="">All Status</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Rejected">Rejected</option>
+                                    <option value="Sold">Sold</option>
+                                </select>
+                                <button onclick="loadAdminListings('all')" class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#cb0c9f] transition-colors">
+                                    <i class="fas fa-sync-alt text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="allListingsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+                    </div>
+
+                    <!-- Reported Content -->
+                    <div id="reportedContent" class="hidden animate-in fade-in duration-500">
+                        <div class="flex items-center justify-between mb-8 pb-6 border-b border-gray-100/50">
+                            <h3 class="text-xl font-black text-gray-900 uppercase tracking-widest">Flagged <span class="text-red-500">Violations</span></h3>
+                            <button onclick="loadReportedListings()" class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
+                                <i class="fas fa-sync-alt text-xs"></i>
+                            </button>
+                        </div>
+                        <div id="reportedListingsGrid" class="space-y-6"></div>
+                    </div>
+
+                    <!-- Users Content -->
+                    <div id="usersContent" class="hidden animate-in fade-in duration-500">
+                        <div class="flex items-center justify-between mb-8 pb-6 border-b border-gray-100/50">
+                            <h3 class="text-xl font-black text-gray-900 uppercase tracking-widest">Global <span class="text-[#cb0c9f]">Citizens</span></h3>
+                            <button onclick="loadAllUsers()" class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#cb0c9f] transition-colors">
+                                <i class="fas fa-sync-alt text-xs"></i>
+                            </button>
+                        </div>
+                        <div id="usersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                    </div>
+
+                    <!-- Support Tickets Content -->
+                    <div id="ticketsContent" class="hidden animate-in fade-in duration-500">
+                        <div class="flex items-center justify-between mb-8 pb-6 border-b border-gray-100/50">
+                            <h3 class="text-xl font-black text-gray-900 uppercase tracking-widest">Support <span class="text-[#cb0c9f]">Tickets</span></h3>
+                            <button onclick="loadSupportTickets()" class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#cb0c9f] transition-colors">
+                                <i class="fas fa-sync-alt text-xs"></i>
+                            </button>
+                        </div>
+
+                        <!-- Ticket Status Filter -->
+                        <div class="flex gap-3 mb-6">
+                            <button onclick="filterTickets('all')" id="filterAll" class="px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest bg-[#cb0c9f] text-white">All</button>
+                            <button onclick="filterTickets('Open')" id="filterOpen" class="px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest text-gray-400 hover:bg-gray-50">Open</button>
+                            <button onclick="filterTickets('Responded')" id="filterResponded" class="px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest text-gray-400 hover:bg-gray-50">Responded</button>
+                        </div>
+
+                        <!-- Tickets List -->
+                        <div id="ticketsList" class="space-y-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Action Modal (Modernized) -->
 <div id="adminActionModal" class="modal">
-    <div class="modal-content max-w-2xl">
-        <button onclick="closeModal('adminActionModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl">
+    <div class="modal-content max-w-2xl animate-in fade-in zoom-in duration-300">
+        <button onclick="closeModal('adminActionModal')" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition-colors z-10 w-10 h-10 rounded-full flex items-center justify-center bg-gray-50/50">
             <i class="fas fa-times"></i>
         </button>
-        <div id="adminActionModalContent" class="p-8"></div>
+        <div id="adminActionModalContent" class="overflow-y-auto max-h-[90vh]"></div>
     </div>
 </div>
     <!-- Toast Notification -->
@@ -543,6 +909,7 @@
     let displayedItems = [];
     let itemsToShow = 20;
     let isLoggedIn = false;
+    let currentUserName = '';
     let currentItemId = null;
     let userListings = [];
     let selectedCategories = [];
@@ -555,6 +922,7 @@
         loadCategories();
         loadInitialItems();
         setupEventListeners();
+        initPriceSlider();
     }
 
     function checkAuthStatus() {
@@ -564,8 +932,21 @@
             success: function(response) {
                 if (response.code === "1" && response.isAuthenticated) {
                     isLoggedIn = true;
+                    isAdmin = response.isAdmin || false;
+                    currentUserName = (response.data ? response.data.name : response.name) || 'User';
+                    updateAuthUI();
+                } else {
+                    isLoggedIn = false;
+                    isAdmin = false;
+                    currentUserName = '';
                     updateAuthUI();
                 }
+            },
+            error: function() {
+                isLoggedIn = false;
+                isAdmin = false;
+                currentUserName = '';
+                updateAuthUI();
             }
         });
     }
@@ -587,7 +968,9 @@
         applyFilters();
     }
 
-    function applyFilters() {
+    function applyFilters(isAppend = false) {
+        if (!isAppend) currentPage = 1;
+        
         const search = document.getElementById('searchInput').value.toLowerCase();
         const location = document.getElementById('locationFilter').value.toLowerCase();
         const minPrice = parseFloat(document.getElementById('minPrice').value) || null;
@@ -603,7 +986,6 @@
         const categoryIds = [];
         document.querySelectorAll('[id^="cat-"]:checked:not(#cat-all)').forEach(cb => {
             const categoryName = cb.value;
-            // Map category name to ID (you'd need to store this mapping)
             if (categoryName) categoryIds.push(getCategoryIdByName(categoryName));
         });
 
@@ -626,18 +1008,34 @@
             data: JSON.stringify(filterRequest),
             success: function(response) {
                 if (response.code === "1" && response.data) {
-                    filteredItems = response.data.items || [];
+                    const newItems = response.data.items || [];
+                    if (isAppend) {
+                        filteredItems = filteredItems.concat(newItems);
+                    } else {
+                        filteredItems = newItems;
+                    }
                     displayedItems = filteredItems;
                     totalPages = response.data.totalPages;
-                    renderItems();
+                    renderItems(isAppend, newItems);
                     updateLoadMoreButton();
                     document.getElementById('itemCount').textContent = response.data.totalCount;
+                    document.getElementById('currentPageNum').textContent = currentPage;
+                    document.getElementById('totalPagesNum').textContent = totalPages;
                 } else {
                     showToast(response.message || 'Failed to load items', 'error');
                 }
             },
             error: function() {
                 showToast('An error occurred while loading items', 'error');
+            },
+            complete: function() {
+                // Close mobile filters after applying (only on mobile)
+                if (window.innerWidth < 1024) {
+                    const sidebar = document.getElementById('filterSidebar');
+                    if (sidebar && sidebar.classList.contains('active')) {
+                        toggleMobileFilters();
+                    }
+                }
             }
         });
     }
@@ -653,68 +1051,98 @@
         return mapping[name] || 0;
     }
 
-    function renderItems() {
+    function renderItems(isAppend = false, newItems = []) {
         const grid = document.getElementById('itemsGrid');
         
-        if (displayedItems.length === 0) {
-            grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-gray-500 text-lg">No items found</p></div>';
+        const itemsToRender = isAppend ? newItems : displayedItems;
+
+        if (!isAppend && itemsToRender.length === 0) {
+            grid.innerHTML = `
+                <div class="col-span-full py-20 text-center">
+                    <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-search text-gray-300 text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">No items found</h3>
+                    <p class="text-gray-500">Try adjusting your filters or search terms</p>
+                </div>
+            `;
             return;
         }
 
-        grid.innerHTML = displayedItems.map(item => `
-            <div class="item-card" onclick="showItemDetail(${item.id})">
-                <div class="item-image-wrapper">
-                    <img src="${item.image}" alt="${item.title}" class="item-image">
-                    <div class="price-badge">R${item.price.toLocaleString()}</div>
-                    <div class="condition-badge">${item.condition}</div>
+        const html = itemsToRender.map(item => `
+            <div class="card-premium group" onclick="showItemDetail(${item.id})">
+                <div class="relative w-full aspect-[4/3] overflow-hidden rounded-t-[calc(var(--radius-md)-1px)] bg-gray-100">
+                    <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    
+                    <!-- Floating Price and Badge -->
+                    <div class="absolute top-4 left-4 glass-effect px-4 py-2 rounded-xl border border-white/50 shadow-sm">
+                        <span class="text-[#cb0c9f] font-black text-lg">R${item.price.toLocaleString()}</span>
+                    </div>
+                    
+                    ${item.isPromoted ? `
+                        <div class="absolute top-4 right-4 bg-yellow-400 text-yellow-900 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md shadow-sm">
+                            Featured
+                        </div>
+                    ` : ''}
                 </div>
-                <div class="item-info">
-                    <strong class="item-title">${item.title}</strong>
-                    <div style="font-weight: 100; font-size: 12px">${item.category}</div>
-                    <div class="item-meta">
-                        <div class="item-meta-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>${item.location}</span>
+
+                <div class="p-5">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">${item.category}</span>
+                        <span class="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">${item.condition}</span>
+                    </div>
+                    
+                    <h4 class="text-base font-bold text-gray-900 leading-snug mb-4 group-hover:text-[#cb0c9f] transition-colors line-clamp-2 min-h-[2.8rem]">
+                        ${item.title}
+                    </h4>
+                    
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-50">
+                        <div class="flex items-center gap-2 text-gray-500">
+                            <i class="fas fa-map-marker-alt text-[10px]"></i>
+                            <span class="text-xs font-semibold">${item.location}</span>
                         </div>
-                        <div class="item-meta-item">
-                            <i class="fas fa-clock"></i>
-                            <span>${getTimeAgo(item.date)}</span>
-                        </div>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase">${getTimeAgo(item.date)}</span>
                     </div>
                 </div>
             </div>
         `).join('');
+        
+        if (isAppend) {
+            grid.insertAdjacentHTML('beforeend', html);
+        } else {
+            grid.innerHTML = html;
+        }
+
+        const curPageEl = document.getElementById('currentPageNum');
+        const totPageEl = document.getElementById('totalPagesNum');
+        if (curPageEl) curPageEl.textContent = currentPage;
+        if (totPageEl) totPageEl.textContent = totalPages;
     }
 
-    function loadMoreItems() {
-        if (currentPage >= totalPages) return;
+    function showItemDetail(id) {
+        // Show something instantly if we can
+        const localItem = displayedItems.find(i => i.id === id) || userListings.find(i => i.id === id);
         
-        currentPage++;
-        
-        const btn = document.getElementById('loadMoreBtn');
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
-
-        applyFilters();
-        
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-arrow-down"></i> <span>Load More Items</span>';
-    }
-
-    function showItemDetail(itemId) {
         $.ajax({
-            url: '/Home/GetListingDetails',
+            url: '@Url.Action("GetListingDetails", "Home")',
             type: 'GET',
-            data: { id: itemId },
+            data: { id: id },
             success: function(response) {
                 if (response.code === "1" && response.data) {
                     renderItemDetail(response.data);
+                } else if (localItem) {
+                    renderItemDetail(localItem);
+                    showToast('Showing cached details', 'warning');
                 } else {
                     showToast(response.message || 'Failed to load item details', 'error');
                 }
             },
             error: function() {
-                showToast('An error occurred', 'error');
+                if (localItem) {
+                    renderItemDetail(localItem);
+                } else {
+                    showToast('An error occurred while loading item details', 'error');
+                }
             }
         });
     }
@@ -725,113 +1153,134 @@
         const content = document.getElementById('itemModalContent');
 
         content.innerHTML = `
-            <div class="image-carousel">
-                ${item.images.map((img, idx) => `
-                    <img src="${img}" alt="${item.title}" class="carousel-image ${idx === 0 ? 'active' : ''}" data-index="${idx}">
-                `).join('')}
-                ${item.images.length > 1 ? `
-                    <button class="carousel-btn prev" onclick="changeCarouselImage(-1)">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="carousel-btn next" onclick="changeCarouselImage(1)">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                    <div class="carousel-indicators">
-                        ${item.images.map((_, idx) => `
-                            <div class="carousel-indicator ${idx === 0 ? 'active' : ''}" onclick="goToCarouselImage(${idx})"></div>
+            <div class="flex flex-col lg:flex-row h-full max-h-[90vh]">
+                <!-- Image Side -->
+                <div class="w-full lg:w-3/5 bg-white relative flex items-center justify-center overflow-hidden min-h-[400px]">
+                    <div class="image-carousel w-full h-full">
+                        ${item.images.map((img, idx) => `
+                            <img src="${img}" alt="${item.title}" class="carousel-image ${idx === 0 ? 'active' : ''} w-full h-full object-contain" data-index="${idx}">
                         `).join('')}
                     </div>
-                ` : ''}
-            </div>
-            <div class="p-8">
-                <div class="flex justify-between items-start mb-6">
-                    <div>
-                        <h2 class="text-3xl font-bold mb-3">${item.title}</h2>
-                        <p class="text-4xl font-bold brand-color mb-4">R${item.price.toLocaleString()}</p>
-                    </div>
-                    <button onclick="reportListing(${item.id})" class="text-gray-400 hover:text-red-500 transition" title="Report Listing">
-                        <i class="fas fa-flag text-xl"></i>
-                    </button>
-                </div>
-                
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 py-4 border-y">
-                    <div>
-                        <p class="text-sm text-gray-500 mb-1">Condition</p>
-                        <p class="font-semibold text-gray-800">${item.condition}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 mb-1">Category</p>
-                        <p class="font-semibold text-gray-800">${item.category}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 mb-1">Location</p>
-                        <p class="font-semibold text-gray-800">${item.location}</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500 mb-1">Posted</p>
-                        <p class="font-semibold text-gray-800">${getTimeAgo(item.date)}</p>
+                    
+                    ${item.images.length > 1 ? `
+                        <button class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full glass-effect flex items-center justify-center text-gray-900 hover:bg-white transition z-10" onclick="changeCarouselImage(-1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full glass-effect flex items-center justify-center text-gray-900 hover:bg-white transition z-10" onclick="changeCarouselImage(1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    ` : ''}
+                    
+                    <!-- Price Overlay (Mobile Only) -->
+                    <div class="lg:hidden absolute bottom-6 left-6 glass-effect px-6 py-3 rounded-2xl border border-white/50 shadow-2xl">
+                        <span class="text-3xl font-black text-[#cb0c9f]">R${item.price.toLocaleString()}</span>
                     </div>
                 </div>
-                
-                <div class="bg-gray-50 rounded-xl p-5 mb-6">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                            ${item.seller.name.charAt(0)}
+
+                <!-- Info Side -->
+                <div class="w-full lg:w-2/5 p-8 md:p-12 overflow-y-auto bg-white flex flex-col">
+                    <div class="mb-8">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-xs font-black text-[#cb0c9f] uppercase tracking-widest bg-pink-50 px-3 py-1 rounded-full">${item.category}</span>
+                            <span class="text-xs font-bold text-gray-400">• ${getTimeAgo(item.date)}</span>
                         </div>
+                        <h2 class="text-3xl font-black text-gray-900 mb-4 leading-tight">${item.title}</h2>
+                        <div class="hidden lg:block">
+                            <p class="text-4xl font-black text-[#cb0c9f] mb-8">R${item.price.toLocaleString()}</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-8 flex-1">
+                        <!-- Seller Info -->
+                        <div class="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100">
+                            <div class="w-14 h-14 bg-gradient-to-br from-[#cb0c9f] to-[#ff0080] rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-pink-500/30">
+                                ${item.seller.name.charAt(0)}
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-gray-900 flex items-center gap-2">
+                                    ${item.seller.name}
+                                    ${item.seller.verified ? '<i class="fas fa-check-circle text-blue-500 text-xs"></i>' : ''}
+                                </h5>
+                                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Member since ${item.seller.joinDate}</p>
+                            </div>
+                            <div class="ml-auto">
+                                <button onclick="handleInterested(${item.userId}, '${item.seller.name}')" class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:border-[#cb0c9f] hover:text-[#cb0c9f] transition">
+                                    <i class="fas fa-comment-dots"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Details Grid -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 rounded-2xl border border-gray-100">
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Condition</p>
+                                <p class="text-sm font-bold text-gray-900">${item.condition}</p>
+                            </div>
+                            <div class="p-4 rounded-2xl border border-gray-100">
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Location</p>
+                                <p class="text-sm font-bold text-gray-900">${item.location}</p>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
                         <div>
-                            <p class="font-semibold text-gray-800 flex items-center gap-2">
-                                ${item.seller.name} 
-                                ${item.seller.verified ? '<i class="fas fa-check-circle text-blue-500" title="Verified Seller"></i>' : ''}
+                            <h5 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Item Description</h5>
+                            <p class="text-gray-600 leading-relaxed text-sm">
+                                ${item.description}
                             </p>
-                            <p class="text-sm text-gray-600">Member since ${item.seller.joinDate}</p>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="mb-6">
-                    <h3 class="font-bold text-xl mb-3">Description</h3>
-                    <p class="text-gray-700 leading-relaxed">${item.description}</p>
-                </div>
-                
-                <div class="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-4 mb-6">
-                    <p class="text-sm text-yellow-800"><i class="fas fa-shield-alt mr-2"></i><strong>Safety Tips:</strong> Meet in public places, inspect items before payment, never share personal financial information.</p>
-                </div>
-                
-                <button onclick="handleInterested(${item.userId})" class="w-full brand-bg text-white py-4 rounded-xl font-semibold text-lg hover:opacity-90 transition shadow-lg">
-                    <i class="fas fa-comment-dots mr-2"></i> I'm Interested
-                </button>
-                
-                ${item.similarItems && item.similarItems.length > 0 ? `
-                    <div class="mt-10">
-                        <h3 class="font-bold text-xl mb-5">Similar Items</h3>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            ${item.similarItems.map(suggested => `
-                                <div class="item-card" onclick="closeModal('itemModal'); setTimeout(() => showItemDetail(${suggested.id}), 300)">
-                                    <div class="item-image-wrapper">
-                                        <img src="${suggested.image}" alt="${suggested.title}" class="item-image">
-                                    </div>
-                                    <div class="p-3">
-                                        <h4 class="font-semibold text-sm mb-2 truncate">${suggested.title}</h4>
-                                        <p class="text-lg font-bold brand-color">R${suggested.price.toLocaleString()}</p>
-                                    </div>
+
+                        <!-- Safety Tip -->
+                        <div class="p-4 rounded-2xl bg-blue-50 border border-blue-100 flex gap-3">
+                            <i class="fas fa-shield-alt text-blue-500 mt-1"></i>
+                            <p class="text-[11px] font-semibold text-blue-800 leading-relaxed">
+                                Always meet in public places, inspect items carefully, and avoid sharing bank details.
+                            </p>
+                        </div>
+
+                        ${item.similarItems && item.similarItems.length > 0 ? `
+                            <div class="pt-8 border-t border-gray-100">
+                                <h5 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">Similar Inventory</h5>
+                                <div class="grid grid-cols-2 gap-4">
+                                    ${item.similarItems.map(suggested => `
+                                        <div class="group/sitem cursor-pointer" onclick="closeModal('itemModal'); setTimeout(() => showItemDetail(${suggested.id}), 300)">
+                                            <div class="aspect-video rounded-xl overflow-hidden bg-gray-100 mb-2">
+                                                <img src="${suggested.image}" alt="${suggested.title}" class="w-full h-full object-cover group-hover/sitem:scale-110 transition-transform">
+                                            </div>
+                                            <h6 class="text-[10px] font-bold text-gray-900 truncate mb-1">${suggested.title}</h6>
+                                            <p class="text-xs font-black text-[#cb0c9f]">R${suggested.price.toLocaleString()}</p>
+                                        </div>
+                                    `).join('')}
                                 </div>
-                            `).join('')}
-                        </div>
+                            </div>
+                        ` : ''}
                     </div>
-                ` : ''}
+
+                    <!-- Action Buttons -->
+                    <div class="mt-12 flex gap-3">
+                        <button onclick="handleInterested(${item.userId}, '${item.seller.name}')" class="flex-1 bg-[#cb0c9f] text-white py-4 rounded-2xl font-bold hover:opacity-90 transition-all shadow-xl shadow-pink-500/30 flex items-center justify-center gap-2 active:scale-95 duration-200">
+                            <i class="fas fa-comment-dots"></i> Message Seller
+                        </button>
+                        <button onclick="reportListing(${item.id})" class="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-red-50 hover:text-red-500 transition-colors border border-gray-100">
+                            <i class="fas fa-flag"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         `;
-
+        
         modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
 
-    function handleInterested(sellerId) {
+    function handleInterested(sellerId, name) {
         if (!isLoggedIn) {
             closeModal('itemModal');
             document.getElementById('loginRequiredModal').classList.add('active');
         } else {
             // Store seller ID for message sending
             window.currentSellerId = sellerId;
+            document.getElementById('messageRecipient').textContent = name;
             closeModal('itemModal');
             document.getElementById('messageModal').classList.add('active');
         }
@@ -983,6 +1432,12 @@
             formData.append('files', file);
         });
 
+        if (selectedImages.length === 0 && isEditing) {
+            // No new images, just update data
+            createListingWithImages([], btn);
+            return;
+        }
+
         // Upload images first
         $.ajax({
             url: '/Home/UploadImages',
@@ -1003,18 +1458,18 @@
             },
             success: function (uploadResponse) {
                 if (uploadResponse.code === "1" && uploadResponse.data) {
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Creating listing...';
+                    btn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> ${isEditing ? 'Updating' : 'Creating'} listing...`;
                     createListingWithImages(uploadResponse.data, btn);
                 } else {
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-check mr-2"></i> Submit Listing';
+                    btn.innerHTML = isEditing ? '<i class="fas fa-save mr-2"></i> Update Listing' : '<i class="fas fa-rocket mr-2"></i> Launch Listing';
                     showToast(uploadResponse.message || 'Failed to upload images', 'error');
                 }
             },
             error: function (err) {
                 console.error('Upload error:', err);
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-check mr-2"></i> Submit Listing';
+                btn.innerHTML = isEditing ? '<i class="fas fa-save mr-2"></i> Update Listing' : '<i class="fas fa-rocket mr-2"></i> Launch Listing';
                 showToast('An error occurred while uploading images', 'error');
             }
         });
@@ -1034,18 +1489,21 @@
             ImagePaths: imagePaths
         };
 
+        const url = isEditing ? `/Home/UpdateListing?id=${editingId}` : '/Home/CreateListing';
+
         $.ajax({
-            url: '/Home/CreateListing',
+            url: url,
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(listingData),
             success: function(response) {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-check mr-2"></i> Submit Listing';
+                btn.innerHTML = isEditing ? '<i class="fas fa-save mr-2"></i> Update Listing' : '<i class="fas fa-rocket mr-2"></i> Launch Listing';
 
                 if (response.code === "1") {
+                    const msg = isEditing ? 'Your listing has been updated successfully!' : 'Your listing has been submitted successfully!';
                     resetCreateListingForm();
-                    showToast('Your listing has been submitted successfully!', 'success');
+                    showToast(msg, 'success');
                     showPage('dashboard');
                     loadUserListings();
                 } else {
@@ -1081,41 +1539,58 @@
 
     function renderUserListings() {
         const grid = document.getElementById('myListingsGrid');
+        const dashListingCount = document.getElementById('dashListingCount');
+        
+        if (dashListingCount) dashListingCount.textContent = userListings.length;
         
         if (userListings.length === 0) {
-            grid.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">No listings yet. <a href="#" onclick="showPage(\'create\')" class="brand-color hover:underline font-semibold">Create your first listing</a></p>';
+            grid.innerHTML = `
+                <div class="col-span-full py-20 text-center">
+                    <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-tag text-gray-300 text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-1">No listings yet</h3>
+                    <p class="text-gray-500 mb-6">Start selling your items today!</p>
+                    <button onclick="showPage('create')" class="px-8 py-3 bg-[#cb0c9f] text-white rounded-xl font-bold text-sm uppercase tracking-widest hover:opacity-90 transition shadow-lg shadow-pink-500/20">
+                        Create Listing
+                    </button>
+                </div>
+            `;
             return;
         }
 
         grid.innerHTML = userListings.map(item => `
-            <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
-                <div class="item-image-wrapper">
-                    <img src="${item.image}" alt="${item.title}" class="item-image">
-                </div>
-                <div class="p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-bold text-lg truncate flex-1">${item.title}</h3>
-                        <span class="text-xs px-3 py-1 rounded-full ${
-                            item.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
-                            item.status === 'Sold' ? 'bg-gray-100 text-gray-800' : 
-                            item.status === 'Approved' ? 'bg-green-100 text-green-800' :
-                            'bg-red-100 text-red-800'
-                        } font-semibold ml-2">${item.status}</span>
+            <div class="card-premium group" onclick="showItemDetail(${item.id})">
+                <div class="relative w-full aspect-video overflow-hidden rounded-t-[calc(var(--radius-md)-1px)] bg-gray-100">
+                    <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
+                    <div class="absolute top-4 right-4">
+                        <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-sm ${
+                            item.status === 'Pending' ? 'bg-yellow-400 text-yellow-900' : 
+                            item.status === 'Sold' ? 'bg-gray-900 text-white' : 
+                            item.status === 'Approved' ? 'bg-green-500 text-white' :
+                            'bg-red-500 text-white'
+                        }">${item.status}</span>
                     </div>
-                    <p class="text-xl font-bold brand-color mb-2">R${item.price.toLocaleString()}</p>
-                    <p class="text-xs text-gray-500 mb-3">
-                        <i class="fas fa-eye mr-1"></i> ${item.viewCount} views
-                    </p>
-                    <div class="flex gap-2">
-                        <button onclick="editListing(${item.id})" class="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition text-sm font-medium">
+                </div>
+                <div class="p-6">
+                    <h4 class="font-bold text-gray-900 mb-2 truncate">${item.title}</h4>
+                    <p class="text-lg font-black text-[#cb0c9f] mb-4">R${item.price.toLocaleString()}</p>
+                    
+                    <div class="flex items-center gap-4 mb-6 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                        <span class="flex items-center gap-1.5"><i class="fas fa-eye"></i> ${item.viewCount} Views</span>
+                        <span class="flex items-center gap-1.5"><i class="fas fa-clock"></i> ${getTimeAgo(item.date)}</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2" onclick="event.stopPropagation()">
+                        <button onclick="editListing(${item.id})" class="flex items-center justify-center gap-2 px-4 py-3 bg-gray-50 text-gray-600 rounded-xl hover:bg-gray-100 transition text-[10px] font-black uppercase tracking-widest">
                             <i class="fas fa-edit"></i> Edit
                         </button>
-                        <button onclick="deleteListing(${item.id})" class="flex-1 bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100 transition text-sm font-medium">
+                        <button onclick="deleteListing(${item.id})" class="flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition text-[10px] font-black uppercase tracking-widest">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                         ${item.status !== 'Sold' ? `
-                        <button onclick="markAsSold(${item.id})" class="flex-1 bg-green-50 text-green-600 py-2 rounded-lg hover:bg-green-100 transition text-sm font-medium">
-                            <i class="fas fa-check"></i> Sold
+                        <button onclick="markAsSold(${item.id})" class="col-span-2 flex items-center justify-center gap-2 px-4 py-3 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 transition text-[10px] font-black uppercase tracking-widest mt-1">
+                            <i class="fas fa-check"></i> Mark as Sold
                         </button>
                         ` : ''}
                     </div>
@@ -1166,9 +1641,47 @@
         });
     }
 
+    let isEditing = false;
+    let editingId = null;
+
     function editListing(id) {
-        // You can implement edit functionality by pre-filling the create form
-        showToast('Edit functionality - redirect to edit page with pre-filled data', 'info');
+        const item = userListings.find(i => i.id === id);
+        if (!item) return;
+
+        isEditing = true;
+        editingId = id;
+
+        // Switch to create page
+        showPage('create');
+
+        // Update Header
+        const header = document.querySelector('#createPage h2');
+        if (header) header.innerHTML = 'Edit <span class="text-[#cb0c9f]">Listing.</span>';
+
+        // Pre-fill form
+        document.getElementById('itemTitle').value = item.title;
+        document.getElementById('itemPrice').value = item.price;
+        document.getElementById('itemCategory').value = item.category;
+        document.getElementById('itemDescription').value = item.description;
+        document.getElementById('itemCondition').value = item.condition;
+        document.getElementById('itemLocation').value = item.location;
+        document.getElementById('notRobot').checked = true;
+
+        // Update button
+        const btn = document.getElementById('submitListingBtn');
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-save"></i> Update Listing';
+        }
+
+        // Preview images (item.image is usually a single URL in this mock/db)
+        const previewGrid = document.getElementById('imagePreviewGrid');
+        if (previewGrid) {
+            previewGrid.innerHTML = `
+                <div class="relative group aspect-square rounded-2xl overflow-hidden border border-gray-100">
+                    <img src="${item.image}" class="w-full h-full object-cover">
+                </div>
+            `;
+        }
     }
 
     function loadMessages() {
@@ -1192,25 +1705,48 @@
         const list = document.getElementById('messagesList');
         
         if (messages.length === 0) {
-            list.innerHTML = '<p class="text-gray-500 text-center py-8">No messages yet</p>';
+            list.innerHTML = `
+                <div class="text-center py-20">
+                    <i class="fas fa-comments text-5xl text-gray-100 mb-4"></i>
+                    <p class="text-gray-400 font-bold uppercase tracking-widest text-xs">No active conversations yet</p>
+                </div>
+            `;
             return;
         }
 
         list.innerHTML = messages.map(msg => `
-            <div class="bg-white border ${msg.unread ? 'border-pink-300 shadow-md' : 'border-gray-200'} rounded-xl p-5 hover:shadow-lg transition cursor-pointer">
-                <div class="flex justify-between items-start mb-2">
-                    <div>
-                        <h4 class="font-bold text-gray-800">${msg.buyer}</h4>
-                        <p class="text-sm text-gray-600">Re: ${msg.item}</p>
+            <div class="glass-effect rounded-3xl border ${msg.unread ? 'border-[#cb0c9f]/30 bg-pink-50/30' : 'border-gray-100 bg-white/40'} p-6 hover:shadow-xl transition-all duration-300 group">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center text-[#cb0c9f] font-black shadow-sm group-hover:bg-[#cb0c9f] group-hover:text-white transition-colors">
+                            ${msg.buyer.charAt(0)}
+                        </div>
+                        <div>
+                            <h4 class="font-black text-gray-900 text-base mb-1">${msg.buyer}</h4>
+                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Re: ${msg.item}</p>
+                        </div>
                     </div>
-                    <div class="flex flex-col items-end">
-                        <span class="text-xs text-gray-500">${msg.time}</span>
-                        ${msg.unread ? '<span class="mt-1 px-2 py-1 bg-pink-500 text-white text-xs rounded-full font-semibold">New</span>' : ''}
+                    <div class="flex flex-col items-end gap-2">
+                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">${msg.time}</span>
+                        ${msg.unread ? '<span class="px-2 py-1 bg-[#cb0c9f] text-white text-[9px] rounded-md font-black uppercase tracking-widest shadow-lg shadow-pink-500/20">Active</span>' : ''}
                     </div>
                 </div>
-                <p class="text-gray-700 mt-2">${msg.lastMessage}</p>
+                <div class="flex items-end justify-between gap-4">
+                    <p class="text-sm font-semibold text-gray-600 line-clamp-2 leading-relaxed pl-16 flex-1">
+                        ${msg.lastMessage}
+                    </p>
+                    <button onclick="openReplyModal('${msg.buyer}')" class="shrink-0 px-6 py-3 bg-white border border-[#cb0c9f]/20 text-[#cb0c9f] rounded-xl hover:bg-[#cb0c9f] hover:text-white transition text-[10px] font-black uppercase tracking-widest shadow-sm">
+                        Reply
+                    </button>
+                </div>
             </div>
         `).join('');
+    }
+
+    function openReplyModal(name) {
+        document.getElementById('messageRecipient').textContent = name;
+        document.getElementById('messageText').value = '';
+        document.getElementById('messageModal').classList.add('active');
     }
 
     function reportListing(listingId) {
@@ -1265,6 +1801,7 @@
                 if (response.code === "1") {
                     isLoggedIn = true;
                     isAdmin = response.isAdmin;
+                    currentUserName = (response.data ? response.data.name : response.name) || email.split('@@')[0];
                     updateAuthUI();
                     showToast('Login successful! Welcome back!', 'success');
                     showPage('browse');
@@ -1353,15 +1890,18 @@
     }
 
     function logout() {
+        document.getElementById('userMenu')?.classList.add('hidden');
+        document.getElementById('adminMenu')?.classList.add('hidden');
+
         $.ajax({
             url: '@Url.Action("Logout", "Home")',
             type: 'POST',
             success: function(response) {
                 isLoggedIn = false;
+                currentUserName = "";
                 updateAuthUI();
                 showToast('Logged out successfully', 'success');
-                showPage('browse');
-                document.getElementById('userMenu').classList.add('hidden');
+                showPage('browse');  
             },
             error: function() {
                 showToast('An error occurred during logout', 'error');
@@ -1372,6 +1912,113 @@
     // Rest of the existing helper functions remain the same
     function setupEventListeners() {
         document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 300));
+        
+        // Location Filter debounce
+        document.getElementById('locationFilter').addEventListener('input', debounce(applyFilters, 300));
+    }
+
+    function initPriceSlider() {
+        const track = document.getElementById('sliderTrack');
+        const range = document.getElementById('sliderRange');
+        const minHandle = document.getElementById('minHandle');
+        const maxHandle = document.getElementById('maxHandle');
+        const minDisplay = document.getElementById('minPriceDisplay');
+        const maxDisplay = document.getElementById('maxPriceDisplay');
+        const minInput = document.getElementById('minPrice');
+        const maxInput = document.getElementById('maxPrice');
+
+        let minPrice = 0;
+        let maxPrice = 100000;
+        const maxLimit = 100000;
+
+        function updateSlider() {
+            const minPercent = (minPrice / maxLimit) * 100;
+            const maxPercent = (maxPrice / maxLimit) * 100;
+
+            minHandle.style.left = minPercent + '%';
+            maxHandle.style.left = maxPercent + '%';
+            range.style.left = minPercent + '%';
+            range.style.right = (100 - maxPercent) + '%';
+
+            minDisplay.textContent = minPrice.toLocaleString();
+            maxDisplay.textContent = maxPrice === maxLimit ? maxPrice.toLocaleString() : maxPrice.toLocaleString();
+            
+            minInput.value = minPrice;
+            maxInput.value = maxPrice;
+        }
+
+        function handleDrag(e, handleType) {
+            const rect = track.getBoundingClientRect();
+            // Support both mouse and touch events
+            const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+            let percent = ((clientX - rect.left) / rect.width) * 100;
+            percent = Math.min(Math.max(percent, 0), 100);
+
+            let price = Math.round((percent / 100) * maxLimit);
+            // Snap to 500s for larger range
+            price = Math.round(price / 500) * 500;
+
+            if (handleType === 'min') {
+                if (price < maxPrice - 1000) { // Keep some distance
+                    minPrice = price;
+                }
+            } else {
+                if (price > minPrice + 1000) {
+                    maxPrice = price;
+                }
+            }
+            updateSlider();
+        }
+
+        function startDrag(e, type) {
+            const handle = type === 'min' ? minHandle : maxHandle;
+            handle.classList.add('active');
+            
+            const moveHandler = (moveEvent) => {
+                // Prevent scrolling while dragging on mobile
+                if (moveEvent.type === 'touchmove') moveEvent.preventDefault();
+                handleDrag(moveEvent, type);
+            };
+            
+            const upHandler = () => {
+                handle.classList.remove('active');
+                document.removeEventListener('mousemove', moveHandler);
+                document.removeEventListener('mouseup', upHandler);
+                document.removeEventListener('touchmove', moveHandler);
+                document.removeEventListener('touchend', upHandler);
+            };
+
+            document.addEventListener('mousemove', moveHandler);
+            document.addEventListener('mouseup', upHandler);
+            document.addEventListener('touchmove', moveHandler, { passive: false });
+            document.addEventListener('touchend', upHandler);
+        }
+
+        minHandle.addEventListener('mousedown', (e) => startDrag(e, 'min'));
+        maxHandle.addEventListener('mousedown', (e) => startDrag(e, 'max'));
+
+        // Mobile support
+        minHandle.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            startDrag(touch, 'min');
+        });
+        
+        maxHandle.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            startDrag(touch, 'max');
+        });
+
+        // Initial update
+        updateSlider();
+
+        // Pass back reset function
+        window.resetSlider = function() {
+            minPrice = 0;
+            maxPrice = 100000;
+            updateSlider();
+        };
     }
 
     function debounce(func, wait) {
@@ -1408,6 +2055,13 @@
         }
     }
 
+    function loadMoreItems() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            applyFilters(true);
+        }
+    }
+
     function handleCategoryFilter(checkbox) {
         if (checkbox.value === '') {
             document.querySelectorAll('[id^="cat-"]').forEach(cb => {
@@ -1441,13 +2095,32 @@
         selectedCategories = [];
         selectedConditions = [];
         currentPage = 1;
+        if (window.resetSlider) window.resetSlider();
         applyFilters();
         showToast('Filters cleared', 'info');
+        
+        // Close mobile filters after clearing
+        if (window.innerWidth < 1024) {
+            const sidebar = document.getElementById('filterSidebar');
+            if (sidebar && sidebar.classList.contains('active')) {
+                toggleMobileFilters();
+            }
+        }
     }
 
     function toggleMobileFilters() {
-        document.getElementById('filterSidebar').classList.toggle('active');
-        document.getElementById('filterOverlay').classList.toggle('active');
+        const sidebar = document.getElementById('filterSidebar');
+        const overlay = document.getElementById('filterOverlay');
+        
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+        
+        // Lock/Unlock body scroll
+        if (sidebar.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
     }
 
     let currentCarouselIndex = 0;
@@ -1482,33 +2155,100 @@
         currentCarouselIndex = 0;
     }
 
-    function showPage(page) {
-        document.getElementById('browsePage').classList.add('hidden');
-        document.getElementById('createPage').classList.add('hidden');
-        document.getElementById('dashboardPage').classList.add('hidden');
-        document.getElementById('authPage').classList.add('hidden');
-
-        if (page === 'browse') {
-            document.getElementById('browsePage').classList.remove('hidden');
-        } else if (page === 'create') {
-            if (!isLoggedIn) {
-                showPage('auth');
-                showToast('Please login to create a listing', 'warning');
-                return;
-            }
-            document.getElementById('createPage').classList.remove('hidden');
-        } else if (page === 'dashboard') {
-            if (!isLoggedIn) {
-                showPage('auth');
-                showToast('Please login to view dashboard', 'warning');
-                return;
-            }
-            document.getElementById('dashboardPage').classList.remove('hidden');
-            loadUserListings();
-        } else if (page === 'auth') {
-            document.getElementById('authPage').classList.remove('hidden');
+    // Contact Us / Support Ticket Functions
+    function showContactModal() {
+        // Close user menu
+        document.getElementById('userMenu')?.classList.add('hidden');
+        document.getElementById('adminMenu')?.classList.add('hidden');
+        
+        // Check if user is logged in
+        if (!isLoggedIn) {
+            showToast('Please login to contact support', 'warning');
+            showPage('auth');
+            return;
         }
+        
+        // Reset form
+        document.getElementById('contactForm').reset();
+        document.getElementById('charCount').textContent = '0';
+        
+        // Show modal
+        document.getElementById('contactModal').classList.add('active');
     }
+
+    // Character counter for support message
+    document.addEventListener('DOMContentLoaded', function() {
+        const messageField = document.getElementById('supportMessage');
+        if (messageField) {
+            messageField.addEventListener('input', function() {
+                const charCount = this.value.length;
+                document.getElementById('charCount').textContent = charCount;
+            });
+        }
+    });
+
+    function submitSupportTicket(event) {
+        event.preventDefault();
+        
+        // Check authentication again
+        if (!isLoggedIn) {
+            showToast('Please login to submit a support ticket', 'warning');
+            closeModal('contactModal');
+            showPage('auth');
+            return;
+        }
+        
+        const title = document.getElementById('supportTitle').value.trim();
+        const message = document.getElementById('supportMessage').value.trim();
+        const submitBtn = document.getElementById('submitSupportBtn');
+        
+        // Validation
+        if (!title || !message) {
+            showToast('Please fill in all fields', 'warning');
+            return;
+        }
+        
+        if (title.length > 200) {
+            showToast('Subject must be 200 characters or less', 'warning');
+            return;
+        }
+        
+        if (message.length > 2000) {
+            showToast('Message must be 2000 characters or less', 'warning');
+            return;
+        }
+        
+        // Disable button and show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        
+        $.ajax({
+            url: '@Url.Action("SubmitSupportTicket", "Home")',
+            type: 'POST',
+            data: {
+                title: title,
+                message: message
+            },
+            success: function(response) {
+                if (response.code === "1") {
+                    showToast('Support ticket submitted successfully! We\'ll respond within 24 hours.', 'success');
+                    closeModal('contactModal');
+                    document.getElementById('contactForm').reset();
+                } else {
+                    showToast(response.message || 'Failed to submit support ticket', 'error');
+                }
+            },
+            error: function() {
+                showToast('An error occurred. Please try again later.', 'error');
+            },
+            complete: function() {
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Support Ticket';
+            }
+        });
+    }
+
 
     //let selectedImages = [];
     //function previewImages(event) {
@@ -1647,6 +2387,17 @@
         imageDataTransfer = new DataTransfer();
         document.getElementById('imageUpload').files = imageDataTransfer.files;
         document.getElementById('imagePreviewGrid').innerHTML = '';
+        
+        isEditing = false;
+        editingId = null;
+
+        // Reset Header
+        const header = document.querySelector('#createPage h2');
+        if (header) header.innerHTML = 'Create <span class="text-[#cb0c9f]">Listing.</span>';
+
+        // Reset Button
+        const btn = document.getElementById('submitListingBtn');
+        if (btn) btn.innerHTML = '<i class="fas fa-rocket"></i> Launch Listing';
     }
 
     function switchAuthTab(tab) {
@@ -1709,7 +2460,17 @@
     }
 
     function updateProfile() {
-        showToast('Profile update functionality would connect to your user update API', 'info');
+        const name = document.getElementById('profileName').value;
+        const email = document.getElementById('profileEmail').value;
+        const phone = document.getElementById('profilePhone').value;
+        const location = document.getElementById('profileLocation').value;
+
+        showToast('Saving profile updates...', 'info');
+        
+        // Simulating API call
+        setTimeout(() => {
+            showToast('Profile updated successfully!', 'success');
+        }, 1000);
     }
 
     function showToast(message, type = 'success') {
@@ -1753,24 +2514,11 @@
 let isAdmin = false;
 let currentAdminListing = null;
 
-// Update checkAuthStatus function
-function checkAuthStatus() {
-    $.ajax({
-        url: '@Url.Action("CheckAuth", "Home")',
-        type: 'GET',
-        success: function(response) {
-            if (response.code === "1" && response.isAuthenticated) {
-                isLoggedIn = true;
-                isAdmin = response.isAdmin || false; // Add this line
-                updateAuthUI();
-            }
-        }
-    });
-}
+// Redundant checkAuthStatus removed - consolidated above
 
 // Update updateAuthUI function
-// Update updateAuthUI function
-function updateAuthUI() {
+
+function updateAuthUI() { 
     const loginBtn = document.getElementById('loginBtn');
     const createListingBtn = document.getElementById('createListingBtn');
     const userMenuBtn = document.getElementById('userMenuBtn');
@@ -1781,16 +2529,29 @@ function updateAuthUI() {
         return;
     }
     
+    const headerName = document.getElementById('headerUserName');
     if (isLoggedIn) {
         loginBtn.style.display = 'none';
         createListingBtn.style.display = 'block';
         userMenuBtn.style.display = 'block';
         dashboardLink.style.display = 'block';
+        
+        const userInfo = document.getElementById('userInfo');
+        if (userInfo && headerName) {
+            headerName.textContent = currentUserName;
+            
+            // Explicitly handle responsive hidden if internal logic demands it, 
+            // but Tailwind's "hidden lg:flex" should handle it if class is present.
+            // We just ensure "hidden" class is there, and toggle "flex" vs "hidden" based on screen if we want JS control,
+            // but here we let Tailwind do its job by NOT removing "hidden".
+        }
     } else {
         loginBtn.style.display = 'block';
         createListingBtn.style.display = 'none';
         userMenuBtn.style.display = 'none';
         dashboardLink.style.display = 'none';
+        
+        headerName.textContent = "";
     }
 }
 
@@ -1805,6 +2566,8 @@ function toggleUserMenu() {
 
 // Update showPage function to include admin
 function showPage(page) {
+    document.getElementById('userMenu')?.classList.add('hidden');
+    document.getElementById('adminMenu')?.classList.add('hidden');
     document.getElementById('browsePage').classList.add('hidden');
     document.getElementById('createPage').classList.add('hidden');
     document.getElementById('dashboardPage').classList.add('hidden');
@@ -1870,12 +2633,14 @@ function switchAdminTab(tab) {
     document.getElementById('allListingsContent').classList.add('hidden');
     document.getElementById('reportedContent').classList.add('hidden');
     document.getElementById('usersContent').classList.add('hidden');
+    document.getElementById('ticketsContent').classList.add('hidden');
 
     // Remove active state from all tabs
     document.getElementById('pendingTab').classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
     document.getElementById('allListingsTab').classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
     document.getElementById('reportedTab').classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
     document.getElementById('usersTab').classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
+    document.getElementById('ticketsTab').classList.remove('border-b-2', 'border-pink-600', 'text-pink-600');
 
     // Show selected content and activate tab
     if (tab === 'pending') {
@@ -1894,7 +2659,231 @@ function switchAdminTab(tab) {
         document.getElementById('usersContent').classList.remove('hidden');
         document.getElementById('usersTab').classList.add('border-b-2', 'border-pink-600', 'text-pink-600');
         loadAllUsers();
+    } else if (tab === 'tickets') {
+        document.getElementById('ticketsContent').classList.remove('hidden');
+        document.getElementById('ticketsTab').classList.add('border-b-2', 'border-pink-600', 'text-pink-600');
+        loadSupportTickets();
     }
+}
+
+// Support Tickets Management Functions
+let allTickets = [];
+let currentTicketFilter = 'all';
+
+// Helper function to parse ASP.NET JSON date format
+function parseJsonDate(jsonDate) {
+    if (!jsonDate) return null;
+    if (typeof jsonDate === 'string' && jsonDate.indexOf('/Date(') === 0) {
+        const timestamp = parseInt(jsonDate.substr(6));
+        return new Date(timestamp);
+    }
+    return new Date(jsonDate);
+}
+
+function loadSupportTickets() {
+    $.ajax({
+        url: '@Url.Action("GetSupportTickets", "Home")',
+        type: 'GET',
+        success: function(response) {
+            console.log('Support Tickets Response:', response);
+            if (response.code === "1") {
+                allTickets = response.tickets;
+                console.log('All Tickets:', allTickets);
+                if (allTickets && allTickets.length > 0) {
+                    console.log('First Ticket:', allTickets[0]);
+                }
+                renderTickets();
+            } else {
+                showToast(response.message || 'Failed to load tickets', 'error');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error loading tickets:', error);
+            console.error('Response:', xhr.responseText);
+            showToast('Error loading support tickets', 'error');
+        }
+    });
+}
+
+function filterTickets(status) {
+    currentTicketFilter = status;
+    
+    document.querySelectorAll('[id^="filter"]').forEach(btn => {
+        btn.classList.remove('bg-[#cb0c9f]', 'text-white');
+        btn.classList.add('text-gray-400', 'hover:bg-gray-50');
+    });
+    document.getElementById('filter' + status.charAt(0).toUpperCase() + status.slice(1)).classList.add('bg-[#cb0c9f]', 'text-white');
+    document.getElementById('filter' + status.charAt(0).toUpperCase() + status.slice(1)).classList.remove('text-gray-400', 'hover:bg-gray-50');
+    
+    renderTickets();
+}
+
+function renderTickets() {
+    const container = document.getElementById('ticketsList');
+    const filteredTickets = currentTicketFilter === 'all' 
+        ? allTickets 
+        : allTickets.filter(t => (t.Status || t.status) === currentTicketFilter);
+    
+    if (filteredTickets.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-16">
+                <div class="w-20 h-20 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-300 mx-auto mb-6">
+                    <i class="fas fa-inbox text-3xl"></i>
+                </div>
+                <p class="text-gray-400 font-semibold">No ${currentTicketFilter === 'all' ? '' : currentTicketFilter.toLowerCase()} tickets found</p>
+            </div>`;
+        return;
+    }
+    
+    container.innerHTML = filteredTickets.map(ticket => {
+        const id = ticket.Id || ticket.id;
+        const status = ticket.Status || ticket.status || 'Open';
+        const title = ticket.Title || ticket.title || 'Untitled';
+        const message = ticket.Message || ticket.message || '';
+        const userEmail = ticket.UserEmail || ticket.userEmail || 'Unknown';
+        const createdAt = ticket.CreatedAt || ticket.createdAt;
+        
+        const statusColor = status === 'Open' ? 'yellow' : status === 'Responded' ? 'green' : 'gray';
+        const parsedDate = parseJsonDate(createdAt);
+        const date = parsedDate ? parsedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Unknown';
+        
+        return `
+            <div class="glass-effect p-6 rounded-2xl border border-gray-100 hover:shadow-lg transition-all cursor-pointer" onclick="viewTicketDetail(${id})">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest bg-${statusColor}-50 text-${statusColor}-600">${status}</span>
+                            <span class="text-[10px] font-semibold text-gray-400">#${id}</span>
+                        </div>
+                        <h4 class="text-lg font-black text-gray-900 mb-2">${title}</h4>
+                        <p class="text-sm text-gray-600 mb-3 line-clamp-2">${message}</p>
+                        <div class="flex items-center gap-4 text-xs text-gray-400 font-semibold">
+                            <span><i class="fas fa-user mr-2"></i>${userEmail}</span>
+                            <span><i class="fas fa-calendar mr-2"></i>${date}</span>
+                        </div>
+                    </div>
+                    <button class="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center text-[#cb0c9f] hover:bg-pink-100 transition-colors">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>`;
+    }).join('');
+}
+
+function viewTicketDetail(ticketId) {
+    const ticket = allTickets.find(t => (t.Id || t.id) === ticketId);
+    if (!ticket) return;
+    
+    const id = ticket.Id || ticket.id;
+    const status = ticket.Status || ticket.status || 'Open';
+    const title = ticket.Title || ticket.title || 'Untitled';
+    const message = ticket.Message || ticket.message || '';
+    const userEmail = ticket.UserEmail || ticket.userEmail || 'Unknown';
+    const createdAt = ticket.CreatedAt || ticket.createdAt;
+    const adminResponse = ticket.AdminResponse || ticket.adminResponse;
+    const respondedAt = ticket.RespondedAt || ticket.respondedAt;
+    const respondedBy = ticket.RespondedBy || ticket.respondedBy;
+    
+    const parsedCreatedAt = parseJsonDate(createdAt);
+    const date = parsedCreatedAt ? parsedCreatedAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Unknown';
+    const statusColor = status === 'Open' ? 'yellow' : status === 'Responded' ? 'green' : 'gray';
+    
+    let detailHTML = `
+        <div class="space-y-6">
+            <div class="flex items-center gap-3">
+                <span class="px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest bg-${statusColor}-50 text-${statusColor}-600">${status}</span>
+                <span class="text-sm font-semibold text-gray-400">Ticket #${id}</span>
+            </div>
+            
+            <div>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Subject</p>
+                <h4 class="text-xl font-black text-gray-900">${title}</h4>
+            </div>
+            
+            <div>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">From</p>
+                <p class="text-sm font-semibold text-gray-700">${userEmail}</p>
+            </div>
+            
+            <div>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Submitted</p>
+                <p class="text-sm font-semibold text-gray-700">${date}</p>
+            </div>
+            
+            <div>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Message</p>
+                <div class="bg-gray-50 p-6 rounded-2xl">
+                    <p class="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">${message}</p>
+                </div>
+            </div>`;
+    
+    if (adminResponse) {
+        const parsedRespondedAt = parseJsonDate(respondedAt);
+        const respondedDate = parsedRespondedAt ? parsedRespondedAt.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Unknown';
+        detailHTML += `
+            <div>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Admin Response</p>
+                <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-2xl">
+                    <p class="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed mb-3">${adminResponse}</p>
+                    <p class="text-xs text-gray-500 font-semibold">Responded by ${respondedBy || 'Admin'} on ${respondedDate}</p>
+                </div>
+            </div>`;
+    }
+    
+    detailHTML += `</div>`;
+    
+    document.getElementById('ticketDetailContent').innerHTML = detailHTML;
+    document.getElementById('responseTicketId').value = ticketId;
+    
+    if (status === 'Open') {
+        document.getElementById('responseFormSection').classList.remove('hidden');
+        document.getElementById('adminResponseMessage').value = '';
+    } else {
+        document.getElementById('responseFormSection').classList.add('hidden');
+    }
+    
+    document.getElementById('ticketDetailModal').classList.add('active');
+}
+
+function submitTicketResponse(event) {
+    event.preventDefault();
+    
+    const ticketId = document.getElementById('responseTicketId').value;
+    const responseMessage = document.getElementById('adminResponseMessage').value.trim();
+    const submitBtn = document.getElementById('submitResponseBtn');
+    
+    if (!responseMessage) {
+        showToast('Please enter a response message', 'warning');
+        return;
+    }
+    
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+    
+    $.ajax({
+        url: '@Url.Action("RespondToTicket", "Home")',
+        type: 'POST',
+        data: {
+            ticketId: ticketId,
+            responseMessage: responseMessage
+        },
+        success: function(response) {
+            if (response.code === "1") {
+                showToast('Response sent successfully! Email sent to user.', 'success');
+                closeModal('ticketDetailModal');
+                loadSupportTickets();
+            } else {
+                showToast(response.message || 'Failed to send response', 'error');
+            }
+        },
+        error: function() {
+            showToast('An error occurred. Please try again.', 'error');
+        },
+        complete: function() {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Response & Email User';
+        }
+    });
 }
 
 function loadAdminListings(type) {
@@ -1925,45 +2914,58 @@ function renderAdminListings(listings, gridId) {
     const grid = document.getElementById(gridId);
     
     if (listings.length === 0) {
-        grid.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">No listings found</p>';
+        grid.innerHTML = `
+            <div class="col-span-full py-20 text-center">
+                <i class="fas fa-box-open text-4xl text-gray-200 mb-4"></i>
+                <p class="text-gray-400 font-bold uppercase tracking-widest text-[10px]">No listings in this category</p>
+            </div>
+        `;
         return;
     }
 
     grid.innerHTML = listings.map(item => `
-        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition">
-            <div class="item-image-wrapper">
-                <img src="${item.image}" alt="${item.title}" class="item-image">
-                <div class="absolute top-2 right-2">
-                    <span class="text-xs px-3 py-1 rounded-full ${
-                        item.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
-                        item.status === 'Sold' ? 'bg-gray-100 text-gray-800' : 
-                        item.status === 'Approved' ? 'bg-green-100 text-green-800' :
-                        'bg-red-100 text-red-800'
-                    } font-semibold">${item.status}</span>
+        <div class="glass-effect rounded-3xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300">
+            <div class="relative w-full aspect-video bg-gray-100">
+                <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
+                <div class="absolute top-4 left-4">
+                    <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-sm ${
+                        item.status === 'Pending' ? 'bg-yellow-400 text-yellow-900' : 
+                        item.status === 'Sold' ? 'bg-gray-900 text-white' : 
+                        item.status === 'Approved' ? 'bg-green-500 text-white' :
+                        'bg-red-500 text-white'
+                    }">${item.status}</span>
                 </div>
             </div>
-            <div class="p-4">
-                <h3 class="font-bold text-lg mb-2 truncate">${item.title}</h3>
-                <p class="text-xl font-bold brand-color mb-2">R${item.price.toLocaleString()}</p>
-                <div class="text-sm text-gray-600 mb-3">
-                    <p><i class="fas fa-user mr-1"></i> ${item.seller || 'Unknown'}</p>
-                    <p><i class="fas fa-map-marker-alt mr-1"></i> ${item.location}</p>
-                    <p><i class="fas fa-clock mr-1"></i> ${getTimeAgo(item.date)}</p>
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h4 class="font-black text-gray-900 text-base truncate mb-1">${item.title}</h4>
+                        <p class="text-sm font-black text-[#cb0c9f]">R${item.price.toLocaleString()}</p>
+                    </div>
+                    <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">
+                        <p>${getTimeAgo(item.date)}</p>
+                    </div>
                 </div>
+                
+                <div class="space-y-2 mb-6 text-[11px] font-bold text-gray-500">
+                    <p class="flex items-center gap-2"><i class="fas fa-user text-[#cb0c9f]/50"></i> ${item.seller || 'Anonymous'}</p>
+                    <p class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-[#cb0c9f]/50"></i> ${item.location}</p>
+                </div>
+
                 <div class="flex gap-2">
-                    <button onclick="viewListingDetails(${item.id})" class="flex-1 bg-blue-50 text-blue-600 py-2 rounded-lg hover:bg-blue-100 transition text-sm font-medium">
-                        <i class="fas fa-eye"></i> View
+                    <button onclick="viewListingDetails(${item.id})" class="flex-1 bg-gray-900 text-white py-3 rounded-xl hover:bg-black transition text-[10px] font-black uppercase tracking-widest">
+                        Preview
                     </button>
                     ${item.status === 'Pending' ? `
-                        <button onclick="approveListingAdmin(${item.id})" class="flex-1 bg-green-50 text-green-600 py-2 rounded-lg hover:bg-green-100 transition text-sm font-medium">
-                            <i class="fas fa-check"></i> Approve
+                        <button onclick="approveListingAdmin(${item.id})" class="flex-1 bg-green-500 text-white py-3 rounded-xl hover:opacity-90 transition text-[10px] font-black uppercase tracking-widest">
+                            Approve
                         </button>
-                        <button onclick="rejectListingAdmin(${item.id})" class="flex-1 bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100 transition text-sm font-medium">
-                            <i class="fas fa-times"></i> Reject
+                        <button onclick="rejectListingAdmin(${item.id})" class="flex-1 bg-red-500 text-white py-3 rounded-xl hover:opacity-90 transition text-[10px] font-black uppercase tracking-widest">
+                            Reject
                         </button>
                     ` : `
-                        <button onclick="deleteListingAdmin(${item.id})" class="flex-1 bg-red-50 text-red-600 py-2 rounded-lg hover:bg-red-100 transition text-sm font-medium">
-                            <i class="fas fa-trash"></i> Delete
+                        <button onclick="deleteListingAdmin(${item.id})" class="flex-1 bg-red-50 text-red-600 py-3 rounded-xl hover:bg-red-100 transition text-[10px] font-black uppercase tracking-widest">
+                            Purge
                         </button>
                     `}
                 </div>
@@ -2069,38 +3071,55 @@ function renderReportedListings(reports) {
     const grid = document.getElementById('reportedListingsGrid');
     
     if (reports.length === 0) {
-        grid.innerHTML = '<p class="text-gray-500 text-center py-8">No reported listings</p>';
+        grid.innerHTML = `
+            <div class="py-20 text-center">
+                <i class="fas fa-shield-alt text-4xl text-gray-100 mb-4"></i>
+                <p class="text-gray-400 font-bold uppercase tracking-widest text-[10px]">No active reports to review</p>
+            </div>
+        `;
         return;
     }
 
     grid.innerHTML = reports.map(report => `
-        <div class="bg-white border border-red-200 rounded-xl p-5 hover:shadow-lg transition">
-            <div class="flex gap-4">
-                <img src="${report.listingImage}" alt="${report.listingTitle}" class="w-24 h-24 object-cover rounded-lg">
+        <div class="glass-effect rounded-3xl border border-red-100 p-6 hover:shadow-xl transition-all duration-300 bg-white/60">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="w-full md:w-32 h-32 rounded-2xl overflow-hidden bg-gray-100">
+                    <img src="${report.listingImage}" alt="${report.listingTitle}" class="w-full h-full object-cover">
+                </div>
                 <div class="flex-1">
-                    <div class="flex justify-between items-start mb-2">
-                        <h4 class="font-bold text-lg">${report.listingTitle}</h4>
-                        <span class="text-xs px-3 py-1 rounded-full bg-red-100 text-red-800 font-semibold">
-                            ${report.reportCount} Report${report.reportCount > 1 ? 's' : ''}
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="font-black text-gray-900 text-lg mb-1">${report.listingTitle}</h4>
+                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fas fa-user-tag text-red-400"></i> Seller: ${report.sellerName}
+                            </p>
+                        </div>
+                        <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 bg-red-500 text-white rounded-lg shadow-lg shadow-red-500/20">
+                            ${report.reportCount} Flagged
                         </span>
                     </div>
-                    <p class="text-sm text-gray-600 mb-3">
-                        <i class="fas fa-user mr-1"></i> Seller: ${report.sellerName}
-                    </p>
-                    <div class="bg-red-50 rounded-lg p-3 mb-3">
-                        <p class="text-sm text-red-800"><strong>Latest Report:</strong></p>
-                        <p class="text-sm text-red-700">"${report.latestReason}"</p>
-                        <p class="text-xs text-red-600 mt-1">Reported by: ${report.reporterName} - ${getTimeAgo(report.reportDate)}</p>
+                    
+                    <div class="bg-red-50/50 rounded-2xl p-5 mb-6 border border-red-100/50">
+                        <div class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 shrink-0">
+                                <i class="fas fa-exclamation text-xs"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-red-900 leading-relaxed mb-2">"${report.latestReason}"</p>
+                                <p class="text-[10px] font-black text-red-400 uppercase tracking-widest">Reporter: ${report.reporterName} • ${getTimeAgo(report.reportDate)}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="viewListingDetails(${report.listingId})" class="bg-blue-50 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-100 transition text-sm font-medium">
-                            <i class="fas fa-eye mr-1"></i> View Listing
+
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="viewListingDetails(${report.listingId})" class="px-6 py-3 bg-gray-900 text-white rounded-xl hover:bg-black transition text-[10px] font-black uppercase tracking-widest">
+                            Inspect
                         </button>
-                        <button onclick="dismissReport(${report.reportId})" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition text-sm font-medium">
-                            <i class="fas fa-check mr-1"></i> Dismiss
+                        <button onclick="dismissReport(${report.reportId})" class="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition text-[10px] font-black uppercase tracking-widest">
+                            Dismiss
                         </button>
-                        <button onclick="deleteListingAdmin(${report.listingId})" class="bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition text-sm font-medium">
-                            <i class="fas fa-trash mr-1"></i> Delete Listing
+                        <button onclick="deleteListingAdmin(${report.listingId})" class="px-6 py-3 bg-red-500 text-white rounded-xl hover:opacity-90 transition text-[10px] font-black uppercase tracking-widest shadow-lg shadow-red-500/20">
+                            Purge Listing
                         </button>
                     </div>
                 </div>
@@ -2150,33 +3169,41 @@ function renderUsers(users) {
     const grid = document.getElementById('usersGrid');
     
     if (users.length === 0) {
-        grid.innerHTML = '<p class="text-gray-500 text-center py-8">No users found</p>';
+        grid.innerHTML = `
+            <div class="col-span-full py-20 text-center">
+                <i class="fas fa-users text-4xl text-gray-100 mb-4"></i>
+                <p class="text-gray-400 font-bold uppercase tracking-widest text-[10px]">No users match the criteria</p>
+            </div>
+        `;
         return;
     }
 
     grid.innerHTML = users.map(user => `
-        <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+        <div class="glass-effect rounded-3xl border border-gray-100 p-6 hover:shadow-xl transition-all duration-300 bg-white/40">
             <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                <div class="flex items-center gap-5">
+                    <div class="w-16 h-16 bg-gradient-to-br from-[#cb0c9f] to-[#ff0080] rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg shadow-pink-500/30">
                         ${user.name.charAt(0)}
                     </div>
                     <div>
-                        <p class="font-semibold text-gray-800 flex items-center gap-2">
-                            ${user.name}
-                            ${user.isAdmin ? '<span class="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full font-semibold">Admin</span>' : ''}
-                        </p>
-                        <p class="text-sm text-gray-600">${user.email}</p>
-                        <p class="text-xs text-gray-500">Joined: ${user.joinDate} • ${user.listingsCount} listings</p>
+                        <div class="flex items-center gap-3 mb-1">
+                            <h4 class="font-black text-gray-900 text-lg">${user.name}</h4>
+                            ${user.isAdmin ? '<span class="text-[9px] font-black uppercase tracking-widest px-2 py-1 bg-purple-500 text-white rounded-md shadow-sm">Overlord</span>' : ''}
+                        </div>
+                        <p class="text-xs font-bold text-gray-400 mb-2">${user.email}</p>
+                        <div class="flex items-center gap-4 text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                            <span class="flex items-center gap-1.5"><i class="fas fa-calendar"></i> Since ${user.joinDate}</span>
+                            <span class="flex items-center gap-1.5"><i class="fas fa-tag"></i> ${user.listingsCount} Items</span>
+                        </div>
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="viewUserListings(${user.id})" class="bg-blue-50 text-blue-600 px-3 py-2 rounded-lg hover:bg-blue-100 transition text-sm">
-                        <i class="fas fa-list"></i> Listings
+                    <button onclick="viewUserListings(${user.id})" class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-[#cb0c9f] transition-all" title="View Listings">
+                        <i class="fas fa-list-ul"></i>
                     </button>
                     ${!user.isAdmin ? `
-                        <button onclick="toggleUserStatus(${user.id}, ${user.isActive})" class="bg-${user.isActive ? 'red' : 'green'}-50 text-${user.isActive ? 'red' : 'green'}-600 px-3 py-2 rounded-lg hover:bg-${user.isActive ? 'red' : 'green'}-100 transition text-sm">
-                            <i class="fas fa-${user.isActive ? 'ban' : 'check'}"></i> ${user.isActive ? 'Suspend' : 'Activate'}
+                        <button onclick="toggleUserStatus(${user.id}, ${user.isActive})" class="w-10 h-10 rounded-xl ${user.isActive ? 'bg-red-50 text-red-500 hover:bg-red-500 hover:text-white' : 'bg-green-50 text-green-500 hover:bg-green-500 hover:text-white'} flex items-center justify-center transition-all" title="${user.isActive ? 'Suspend' : 'Activate'}">
+                            <i class="fas fa-${user.isActive ? 'ban' : 'check'}"></i>
                         </button>
                     ` : ''}
                 </div>

@@ -1,6 +1,5 @@
 ﻿using System.Web;
 using System.Web.Mvc;
-using rexell.Filters;
 
 namespace rexell
 {
@@ -8,7 +7,7 @@ namespace rexell
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new GlobalExceptionFilter());
+            filters.Add(new HandleErrorAttribute());
         }
     }
 }

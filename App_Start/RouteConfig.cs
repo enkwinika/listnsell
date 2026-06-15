@@ -17,7 +17,7 @@ namespace rexell
             routes.MapRoute(
                 name: "Marketplace",
                 url: "marketplace/{action}/{id}",
-                defaults: new { controller = "Marketplace", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
 
             routes.MapRoute(

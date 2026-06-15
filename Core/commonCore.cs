@@ -124,7 +124,7 @@ namespace rexell.Core
                                 u.IsEmailVerified as IsVerified,
                                 u.CreatedDate as SellerJoinDate,
                                 u.ProfileImage,
-                                (SELECT TOP 1 ImagePath FROM ListingImages WHERE ListingId = l.ListingId AND IsActive = 1 ORDER BY ImageOrder) as MainImage
+                                (SELECT TOP 1 ImagePath FROM ListingImages WHERE ListingId = l.ListingId ORDER BY ImageOrder) as MainImage
                             FROM Listings l
                             INNER JOIN Users u ON l.UserId = u.UserId
                             INNER JOIN Categories c ON l.CategoryId = c.CategoryId
@@ -165,7 +165,7 @@ namespace rexell.Core
                                 u.IsEmailVerified as IsVerified,
                                 u.CreatedDate as SellerJoinDate,
                                 u.ProfileImage,
-                                (SELECT TOP 1 ImagePath FROM ListingImages WHERE ListingId = l.ListingId AND IsActive = 1 ORDER BY ImageOrder) as MainImage
+                                (SELECT TOP 1 ImagePath FROM ListingImages WHERE ListingId = l.ListingId ORDER BY ImageOrder) as MainImage
                             FROM Listings l
                             INNER JOIN Users u ON l.UserId = u.UserId
                             INNER JOIN Categories c ON l.CategoryId = c.CategoryId
@@ -323,7 +323,7 @@ namespace rexell.Core
                     var images = cn.Query<string>(@"
                         SELECT ImagePath 
                         FROM ListingImages 
-                        WHERE ListingId = @ListingId AND IsActive = 1 
+                        WHERE ListingId = @ListingId 
                         ORDER BY ImageOrder",
                         new { ListingId = listingId }).ToList();
 
@@ -344,7 +344,7 @@ namespace rexell.Core
                             l.Price,
                             l.Location,
                             l.CreatedDate,
-                            (SELECT TOP 1 ImagePath FROM ListingImages WHERE ListingId = l.ListingId AND IsActive = 1 ORDER BY ImageOrder) as MainImage
+                            (SELECT TOP 1 ImagePath FROM ListingImages WHERE ListingId = l.ListingId ORDER BY ImageOrder) as MainImage
                         FROM Listings l
                         WHERE l.CategoryId = @CategoryId 
                         AND l.ListingId != @ListingId 
@@ -423,7 +423,7 @@ namespace rexell.Core
                             l.Status,
                             l.CreatedDate,
                             l.ViewCount,
-                            (SELECT TOP 1 ImagePath FROM ListingImages WHERE ListingId = l.ListingId AND IsActive = 1 ORDER BY ImageOrder) as MainImage
+                            (SELECT TOP 1 ImagePath FROM ListingImages WHERE ListingId = l.ListingId ORDER BY ImageOrder) as MainImage
                         FROM Listings l
                         WHERE l.UserId = @UserId AND l.IsActive = 1
                         ORDER BY l.CreatedDate DESC",
@@ -694,11 +694,11 @@ namespace rexell.Core
                     c.CategoryName as Category,
                     u.FirstName + ' ' + u.LastName as Seller,
                     u.UserId,
-                    (SELECT TOP 1 ImagePath FROM ListingImages WHERE ListingId = l.ListingId AND IsActive = 1 ORDER BY ImageOrder) as Image
+                    (SELECT TOP 1 ImagePath FROM ListingImages WHERE ListingId = l.ListingId ORDER BY ImageOrder) as Image
                 FROM Listings l
                 INNER JOIN Categories c ON l.CategoryId = c.CategoryId
                 INNER JOIN Users u ON l.UserId = u.UserId
-                WHERE l.IsActive = 1
+                WHERE l.IsActive is null
                 AND (@Status = '' OR l.Status = @Status)
                 ORDER BY l.CreatedDate DESC";
 
@@ -751,7 +751,7 @@ namespace rexell.Core
                 {
                     cn.Execute(@"
                 UPDATE Listings 
-                SET Status = 'Approved', 
+                SET Status = 'Approved', IsActive = 1, 
                     UpdatedDate = GETDATE() 
                 WHERE ListingId = @ListingId",
                         new { ListingId = listingId });
@@ -865,7 +865,7 @@ namespace rexell.Core
                     reporter.FirstName + ' ' + reporter.LastName as ReporterName,
                     r.ReasonText as LatestReason,
                     r.ReportedDate as ReportDate,
-                    (SELECT TOP 1 ImagePath FROM ListingImages WHERE ListingId = l.ListingId AND IsActive = 1 ORDER BY ImageOrder) as ListingImage,
+                    (SELECT TOP 1 ImagePath FROM ListingImages WHERE ListingId = l.ListingId ORDER BY ImageOrder) as ListingImage,
                     (SELECT COUNT(*) FROM Reports WHERE ListingId = r.ListingId AND Status = 'Pending') as ReportCount
                 FROM Reports r
                 INNER JOIN Listings l ON r.ListingId = l.ListingId
@@ -1092,6 +1092,43 @@ namespace rexell.Core
                             request.ReceiverId,
                             request.MessageText
                         });
+
+                    // Send email notification to seller (async-ish if it was possible, but here simplified)
+                    try
+                    {
+                        var info = cn.QueryFirstOrDefault<dynamic>(@"
+                            SELECT 
+                                l.Title, 
+                                l.ListingId,
+                                s.Email as SellerEmail, 
+                                s.FirstName + ' ' + s.LastName as SellerName,
+                                b.FirstName + ' ' + b.LastName as BuyerName,
+                                b.Email as BuyerEmail,
+                                b.Phone as BuyerPhone
+                            FROM Listings l
+                            JOIN Users s ON l.UserId = s.UserId
+                            JOIN Users b ON b.UserId = @BuyerId
+                            WHERE l.ListingId = @ListingId",
+                            new { ListingId = request.ListingId, BuyerId = senderId });
+
+                        if (info != null)
+                        {
+                            SendSellerNotificationEmail(
+                                (string)info.SellerEmail,
+                                (string)info.SellerName,
+                                (string)info.BuyerName,
+                                (string)info.BuyerEmail,
+                                (string)info.BuyerPhone,
+                                (string)info.Title,
+                                (int)info.ListingId,
+                                request.MessageText
+                            );
+                        }
+                    }
+                    catch (Exception emailEx)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Failed to send notification email: {emailEx.Message}");
+                    }
 
                     return new AjaxResults
                     {
@@ -1348,10 +1385,10 @@ namespace rexell.Core
                         // Insert user
                         var userId = cn.QuerySingle<int>(@"
                         INSERT INTO Users (FirstName, LastName, Email, Phone, PasswordHash, 
-                                         IsEmailVerified, VerificationCode, VerificationCodeExpiry, IsActive, CreatedDate)
+                                         IsEmailVerified, VerificationCode, VerificationCodeExpiry, IsActive, CreatedDate, isAdmin)
                         OUTPUT INSERTED.UserId
                         VALUES (@FirstName, @LastName, @Email, @Phone, @PasswordHash, 
-                                0, @VerificationCode, @VerificationCodeExpiry, 1, GETDATE())",
+                                0, @VerificationCode, @VerificationCodeExpiry, 0, GETDATE(),0)",
                             new
                             {
                                 FirstName = model.firstname,
@@ -1498,7 +1535,7 @@ namespace rexell.Core
                             new { UserId = user.UserId });
 
                         // Create authentication ticket
-                        //FormsAuthentication.SetAuthCookie(user.Email, false);
+                        FormsAuthentication.SetAuthCookie(user.Email, false);
 
                         return new AjaxResults
                         {
@@ -1523,7 +1560,7 @@ namespace rexell.Core
                     {
                         code = "0",
                         title = "Error",
-                        message = ex.Message
+                        message = "Login failed. Please try again."
                     };
                 }
             }
@@ -2070,63 +2107,6 @@ namespace rexell.Core
             }
 
             /// <summary>
-            /// Send verification email
-            /// </summary>
-            private static bool SendVerificationEmail(string email, string code, string firstName)
-            {
-                try
-                {
-                    // Email configuration - UPDATE THESE WITH YOUR SMTP SETTINGS
-                    string smtpHost = ConfigurationManager.AppSettings["SmtpHost"] ?? "smtp.gmail.com";
-                    int smtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpPort"] ?? "587");
-                    string smtpUsername = ConfigurationManager.AppSettings["SmtpUsername"] ?? "your-email@gmail.com";
-                    string smtpPassword = ConfigurationManager.AppSettings["SmtpPassword"] ?? "your-app-password";
-                    string fromEmail = ConfigurationManager.AppSettings["FromEmail"] ?? smtpUsername;
-                    string fromName = ConfigurationManager.AppSettings["FromName"] ?? "ReXell Marketplace";
-
-                    using (MailMessage mail = new MailMessage())
-                    {
-                        mail.From = new MailAddress(fromEmail, fromName);
-                        mail.To.Add(email);
-                        mail.Subject = "Verify Your Email - ReXell Marketplace";
-                        mail.IsBodyHtml = true;
-                        mail.Body = $@"
-                        <html>
-                        <body style='font-family: Arial, sans-serif;'>
-                            <div style='max-width: 600px; margin: 0 auto; padding: 20px;'>
-                                <h2 style='color: #e91e63;'>Welcome to ReXell, {firstName}!</h2>
-                                <p>Thank you for registering. Please verify your email address to complete your registration.</p>
-                                <div style='background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;'>
-                                    <p style='margin: 0; font-size: 14px; color: #666;'>Your verification code is:</p>
-                                    <h1 style='margin: 10px 0; color: #e91e63; font-size: 32px; letter-spacing: 5px;'>{code}</h1>
-                                </div>
-                                <p style='color: #666; font-size: 14px;'>This code will expire in 24 hours.</p>
-                                <p style='color: #666; font-size: 14px;'>If you didn't create an account, please ignore this email.</p>
-                                <hr style='border: none; border-top: 1px solid #ddd; margin: 30px 0;'>
-                                <p style='color: #999; font-size: 12px;'>ReXell Marketplace - Buy & Sell with Confidence</p>
-                            </div>
-                        </body>
-                        </html>
-                    ";
-
-                        using (SmtpClient smtp = new SmtpClient(smtpHost, smtpPort))
-                        {
-                            smtp.Credentials = new NetworkCredential(smtpUsername, smtpPassword);
-                            smtp.EnableSsl = true;
-                            smtp.Send(mail);
-                        }
-                    }
-
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Email send error: {ex.Message}");
-                    return false;
-                }
-            }
-
-            /// <summary>
             /// Send password reset email
             /// </summary>
             private static bool SendPasswordResetEmail(string email, string code, string firstName)
@@ -2184,5 +2164,176 @@ namespace rexell.Core
             }
 
             #endregion
+
+        #region Email Verification & Notifications
+
+        /// <summary>
+        /// Send verification email to user with activation link
+        /// </summary>
+        public static bool SendVerificationEmail(string email, string verificationCode, string firstName)
+        {
+            try
+            {
+                var fromAddress = ConfigurationManager.AppSettings["EmailFromAddress"];
+                var fromName = ConfigurationManager.AppSettings["EmailFromName"];
+                var smtpHost = ConfigurationManager.AppSettings["SmtpHost"];
+                var smtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpPort"]);
+                var smtpUsername = ConfigurationManager.AppSettings["SmtpUsername"];
+                var smtpPassword = ConfigurationManager.AppSettings["SmtpPassword"];
+                var smtpEnableSSL = bool.Parse(ConfigurationManager.AppSettings["SmtpEnableSSL"]);
+                var baseUrl = ConfigurationManager.AppSettings["BaseUrl"] ?? "http://localhost";
+
+                var verificationLink = $"{baseUrl}/Home/VerifyEmail?code={verificationCode}";
+
+                System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
+                using (var smtpClient = new SmtpClient(smtpHost, smtpPort))
+                {
+                    smtpClient.Credentials = new NetworkCredential(smtpUsername, smtpPassword);
+                    smtpClient.EnableSsl = smtpEnableSSL;
+
+                    var mail = new MailMessage
+                    {
+                        From = new MailAddress(fromAddress, fromName),
+                        Subject = "Verify Your Email - listNsell",
+                        Body = $@"<html><body style='font-family:Arial,sans-serif;'><div style='max-width:600px;margin:0 auto;padding:20px;background:#f8f9fa;'><div style='background:linear-gradient(135deg,#cb0c9f 0%,#7928ca 100%);padding:30px;border-radius:10px 10px 0 0;'><h1 style='color:white;margin:0;'>Welcome to listNsell!</h1></div><div style='background:white;padding:30px;border-radius:0 0 10px 10px;'><p>Hi {firstName},</p><p>Thank you for registering with listNsell! To complete your registration and activate your account, please verify your email address by clicking the button below:</p><div style='text-align:center;margin:30px 0;'><a href='{verificationLink}' style='display:inline-block;padding:15px 40px;background:linear-gradient(135deg,#cb0c9f 0%,#7928ca 100%);color:white;text-decoration:none;border-radius:8px;font-weight:bold;'>Verify Email Address</a></div><p style='color:#666;font-size:14px;'>Or copy and paste this link into your browser:</p><p style='background:#f8f9fa;padding:15px;border-radius:8px;word-break:break-all;font-size:12px;'>{verificationLink}</p><p style='color:#999;font-size:12px;margin-top:30px;'>This verification link will expire in 24 hours. If you didn't create an account with listNsell, please ignore this email.</p><p style='margin-top:30px;'>Best regards,<br><strong>listNsell Team</strong></p></div></div></body></html>",
+                        IsBodyHtml = true
+                    };
+                    mail.To.Add(email);
+                    smtpClient.Send(mail);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to send verification email: {ex.Message}");
+                return false;
+            }
         }
+
+        /// <summary>
+        /// Verify email address with verification code
+        /// </summary>
+        public static AjaxResults VerifyEmailAddress(string verificationCode)
+        {
+            try
+            {
+                using (var cn = GetOpenConnection())
+                {
+                    // Find user with this verification code
+                    var user = cn.QuerySingleOrDefault<dynamic>(@"
+                        SELECT UserId, Email, FirstName, VerificationCodeExpiry, IsEmailVerified
+                        FROM Users 
+                        WHERE VerificationCode = @Code",
+                        new { Code = verificationCode });
+
+                    if (user == null)
+                    {
+                        return new AjaxResults
+                        {
+                            code = "0",
+                            title = "Invalid Code",
+                            message = "Invalid verification code. Please check the link and try again."
+                        };
+                    }
+
+                    if (user.IsEmailVerified)
+                    {
+                        return new AjaxResults
+                        {
+                            code = "1",
+                            title = "Already Verified",
+                            message = "Your email is already verified. You can now login to your account."
+                        };
+                    }
+
+                    // Check if code has expired
+                    if (user.VerificationCodeExpiry < DateTime.Now)
+                    {
+                        return new AjaxResults
+                        {
+                            code = "0",
+                            title = "Expired Code",
+                            message = "This verification link has expired. Please request a new verification email."
+                        };
+                    }
+
+                    // Update user as verified and activate account
+                    cn.Execute(@"
+                        UPDATE Users 
+                        SET IsEmailVerified = 1, 
+                            IsActive = 1,
+                            VerificationCode = NULL, 
+                            VerificationCodeExpiry = NULL 
+                        WHERE UserId = @UserId",
+                        new { UserId = user.UserId });
+
+                    return new AjaxResults
+                    {
+                        code = "1",
+                        title = "Success",
+                        message = $"Email verified successfully! Welcome to listNsell, {user.FirstName}. You can now login to your account.",
+                        data = new { email = user.Email }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AjaxResults
+                {
+                    code = "0",
+                    title = "Error",
+                    message = "An error occurred during verification. Please try again."
+                };
+            }
+        }
+
+        /// <summary>
+        /// Send email notification to seller when buyer sends message
+        /// </summary>
+        public static bool SendSellerNotificationEmail(string sellerEmail, string sellerName, string buyerName, string buyerEmail, string buyerPhone, string listingTitle, int listingId, string message)
+        {
+            try
+            {
+                var fromAddress = ConfigurationManager.AppSettings["EmailFromAddress"];
+                var fromName = ConfigurationManager.AppSettings["EmailFromName"];
+                var smtpHost = ConfigurationManager.AppSettings["SmtpHost"];
+                var smtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpPort"]);
+                var smtpUsername = ConfigurationManager.AppSettings["SmtpUsername"];
+                var smtpPassword = ConfigurationManager.AppSettings["SmtpPassword"];
+                var smtpEnableSSL = bool.Parse(ConfigurationManager.AppSettings["SmtpEnableSSL"]);
+                var baseUrl = ConfigurationManager.AppSettings["BaseUrl"] ?? "http://localhost";
+
+                var listingLink = $"{baseUrl}/#listing-{listingId}";
+
+                System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
+                using (var smtpClient = new SmtpClient(smtpHost, smtpPort))
+                {
+                    smtpClient.Credentials = new NetworkCredential(smtpUsername, smtpPassword);
+                    smtpClient.EnableSsl = smtpEnableSSL;
+
+                    var phoneInfo = !string.IsNullOrEmpty(buyerPhone) ? $"<p><strong>Phone:</strong> {buyerPhone}</p>" : "";
+
+                    var mail = new MailMessage
+                    {
+                        From = new MailAddress(fromAddress, fromName),
+                        Subject = $"New Message About Your Listing: {listingTitle}",
+                        Body = $@"<html><body style='font-family:Arial,sans-serif;'><div style='max-width:600px;margin:0 auto;padding:20px;background:#f8f9fa;'><div style='background:linear-gradient(135deg,#cb0c9f 0%,#7928ca 100%);padding:30px;border-radius:10px 10px 0 0;'><h1 style='color:white;margin:0;'>New Buyer Inquiry!</h1></div><div style='background:white;padding:30px;border-radius:0 0 10px 10px;'><p>Hi {sellerName},</p><p>You have received a new message about your listing: <strong>{listingTitle}</strong></p><div style='background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;'><h3 style='margin:0 0 15px 0;color:#333;'>Buyer Information</h3><p><strong>Name:</strong> {buyerName}</p><p><strong>Email:</strong> {buyerEmail}</p>{phoneInfo}</div><div style='background:#fff3cd;border-left:4px solid#ffc107;padding:20px;border-radius:8px;margin:20px 0;'><p style='margin:0 0 10px 0;'><strong>Message:</strong></p><p style='white-space:pre-wrap;margin:0;'>{message}</p></div><div style='text-align:center;margin:30px 0;'><a href='{listingLink}' style='display:inline-block;padding:15px 40px;background:linear-gradient(135deg,#cb0c9f 0%,#7928ca 100%);color:white;text-decoration:none;border-radius:8px;font-weight:bold;'>View Your Listing</a></div><p style='color:#666;font-size:14px;'>Please respond to the buyer directly at their email address: <a href='mailto:{buyerEmail}'>{buyerEmail}</a></p><p style='margin-top:30px;'>Best regards,<br><strong>listNsell Team</strong></p></div></div></body></html>",
+                        IsBodyHtml = true
+                    };
+                    mail.To.Add(sellerEmail);
+                    smtpClient.Send(mail);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to send seller notification email: {ex.Message}");
+                return false;
+            }
+        }
+
+        #endregion
     }
+}
